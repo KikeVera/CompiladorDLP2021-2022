@@ -1,0 +1,281 @@
+package codeGenerator;
+
+import ast.FunctionInvocation;
+import ast.expressions.*;
+import ast.expressions.literals.CharLiteral;
+import ast.expressions.literals.DoubleLiteral;
+import ast.expressions.literals.IntLiteral;
+import ast.expressions.operators.Arithmetic;
+import ast.expressions.operators.Comparison;
+import ast.expressions.operators.Logic;
+import ast.expressions.unary.Negation;
+import ast.expressions.unary.UnaryMinus;
+
+public class ValueCGVisitor extends AbstractCGVisitor {
+
+    private CodeGenerator codeGenerator;
+    private AddressCGVisitor addressCGVisitor;
+
+
+    public void setResources(CodeGenerator codeGenerator,AddressCGVisitor addressCGVisitor){
+        this.codeGenerator=codeGenerator;
+        this.addressCGVisitor=addressCGVisitor;
+
+    }
+
+    /*
+    value[[Variable : Expression -> ID:String ]]()
+         address[[variable]]()
+         <load> expression.type.suffix()
+
+    */
+
+    @Override
+    public Object visit(Variable campo, Object param) {
+        campo.accept(this.addressCGVisitor,param);
+        codeGenerator.load(campo.getType());
+
+        return null;
+    }
+
+    /*
+    value[[CharLiteral : Expression -> value:char ]]()
+         <pushb> value
+
+    */
+
+    @Override
+    public Object visit(CharLiteral campo, Object param) {
+
+        codeGenerator.push(campo.getValue());
+        return null;
+    }
+
+    /*
+    value[[DoubleLiteral : Expression -> value:double ]]()
+         <pushf> value
+
+    */
+
+    @Override
+    public Object visit(DoubleLiteral campo, Object param) {
+
+        codeGenerator.push(campo.getValue());
+        return null;
+    }
+
+    /*
+    value[[IntLiteral : Expression -> value:int ]]()
+         <pushi> value
+
+    */
+
+    @Override
+    public Object visit(IntLiteral campo, Object param) {
+
+         codeGenerator.push(campo.getValue());
+         return null;
+    }
+
+    /*
+    value[[Arithmetic : expression -> expressionDer:Expression expressionIzq:Expression operator:String ]]()
+         value[[expressionDer]]()
+         value[[expressionIzq]]()
+         if(operator.equals("+"))
+            <add> expression.type.suffix()
+         if(operator.equals("-"))
+            <sub> expression.type.suffix()
+         if(operator.equals("*"))
+            <mul> expression.type.suffix()
+         if(operator.equals("/"))
+            <div> expression.type.suffix()
+         if(operator.equals("%"))
+            <mod> expression.type.suffix()
+
+    */
+
+    @Override
+    public Object visit(Arithmetic campo, Object param) {
+        campo.getExpressionIzq().accept(this,null);
+        campo.getExpressionDer().accept(this,null);
+        if(campo.getOperator().equals("+"))
+            codeGenerator.add(campo.getType());
+        if(campo.getOperator().equals("-"))
+            codeGenerator.sub(campo.getType());
+        if(campo.getOperator().equals("*"))
+            codeGenerator.mul(campo.getType());
+        if(campo.getOperator().equals("/"))
+            codeGenerator.div(campo.getType());
+        if(campo.getOperator().equals("%"))
+            codeGenerator.mod(campo.getType());
+
+        return null;
+    }
+
+    /*
+    value[[Comparison : expression -> expressionDer:Expression expressionIzq:Expression operator:String ]]()
+         value[[expressionDer]]()
+         value[[expressionIzq]]()
+         if(operator.equals(">"))
+            <gt> expression.type.suffix()
+         if(operator.equals(">="))
+            <ge> expression.type.suffix()
+         if(operator.equals("<"))
+            <lt> expression.type.suffix()
+         if(operator.equals("<="))
+            <le> expression.type.suffix()
+         if(operator.equals("!="))
+            <ne> expression.type.suffix()
+         if(operator.equals("=="))
+            <eq> expression.type.suffix()
+
+    */
+
+    @Override
+    public Object visit(Comparison campo, Object param) {
+        campo.getExpressionIzq().accept(this,null);
+        campo.getExpressionDer().accept(this,null);
+
+        if(campo.getOperator().equals(">"))
+            codeGenerator.gt(campo.getType());
+        if(campo.getOperator().equals(">="))
+            codeGenerator.ge(campo.getType());
+        if(campo.getOperator().equals("<"))
+            codeGenerator.lt(campo.getType());
+        if(campo.getOperator().equals("<="))
+            codeGenerator.le(campo.getType());
+        if(campo.getOperator().equals("!="))
+            codeGenerator.ne(campo.getType());
+        if(campo.getOperator().equals("=="))
+            codeGenerator.eq(campo.getType());
+
+        return null;
+    }
+
+    /*
+    value[[Logic : expression -> expressionDer:Expression expressionIzq:Expression operator:String ]]()
+         value[[expressionDer]]()
+         value[[expressionIzq]]()
+         if(operator.equals("&&"))
+            <and>
+         if(operator.equals("||"))
+            <or>
+    */
+
+    @Override
+    public Object visit(Logic campo, Object param) {
+        campo.getExpressionIzq().accept(this,null);
+        campo.getExpressionDer().accept(this,null);
+        if(campo.getOperator().equals("&&"))
+            codeGenerator.and();
+        if(campo.getOperator().equals("||"))
+            codeGenerator.or();
+
+
+        return null;
+    }
+
+     /*
+    value[[Negation : Expression -> expression:Expression ]]()
+         value[[expression]]()
+            <not>
+    */
+
+    @Override
+    public Object visit(Negation campo, Object param) {
+        campo.getExpression().accept(this,param);
+        codeGenerator.not();
+        return null;
+    }
+
+    /*
+    value[[UnaryMinus : Expression -> expression:Expression ]]()
+
+         value[[expression]]()
+         <push> -1
+         <mul> expression.type.suffix()
+
+
+    */
+
+    @Override
+    public Object visit(UnaryMinus campo, Object param) {
+        campo.getExpression().accept(this,param);
+        this.codeGenerator.push(-1);
+        this.codeGenerator.mul(campo.getType());
+        return null;
+    }
+
+    /*
+    value[[ArrayAccess : Expression -> array:Expression access:Expression ]]()
+         address[[ArrayAccess]]()
+         <load> expression.type.suffix()
+
+    */
+
+    @Override
+    public Object visit(ArrayAccess campo, Object param) {
+        campo.accept(addressCGVisitor,param);
+        codeGenerator.load(campo.getType());
+        return null;
+    }
+
+    /*
+    value[[Cast : Expression -> expression:Expression castType:Type ]]()
+         value[[expression]]()
+         if(expression.type.equals(CharType)&&castType.equals(IntType))
+            <b2i>
+         if(expression.type.equals(CharType)&&castType.equals(DoubleType)){
+            <b2i>
+            <i2f>
+         }
+         if(expression.type.equals(IntType)&&castType.equals(CharType))
+            <i2b>
+         if(expression.type.equals(IntType)&&castType.equals(DoubleType))
+            <i2f>
+         if(expression.type.equals(DoubleType)&&castType.equals(IntType))
+            <f2i>
+         if(expression.type.equals(DoubleType)&&castType.equals(CharType)){
+            <f2i>
+            <i2f>
+          }
+
+    */
+
+    @Override
+    public Object visit(Cast campo, Object param) {
+        campo.getExpression().accept(this,null);
+        codeGenerator.convert(campo.getExpression().getType(),campo.getCastType());
+        return null;
+    }
+
+    /*
+    value[[FieldAccess : Expression -> left:Expression field:String ]]()
+         address[[FieldAccess]]()
+         <load> expression.type.suffix()
+
+    */
+
+    @Override
+    public Object visit(FieldAcess campo, Object param) {
+        campo.accept(this.addressCGVisitor,param);
+        this.codeGenerator.load(campo.getType());
+        return null;
+    }
+
+    /*
+    value[[Functioninvocation : expression -> function:Expression expression* ]]()
+        for(Expression arg: expression*)
+            value[[arg]]()
+        <call> function.name
+    */
+
+    @Override
+    public Object visit(FunctionInvocation campo, Object param) {
+       for(Expression arg:campo.getParams()){
+           arg.accept(this,param);
+       }
+       this.codeGenerator.call(campo.getFunction().getName());
+        return null;
+    }
+}
