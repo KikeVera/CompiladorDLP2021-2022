@@ -9,7 +9,7 @@ import ast.expressions.unary.*;
 import ast.definitions.*;
 import ast.statements.*;
 import ast.types.*;
-import errorHandler.*;
+
 
 }
 
@@ -17,8 +17,8 @@ program returns [Program ast] :  definitions mainDef  EOF {$definitions.ast.add(
        ;
 
 mainDef returns [FuncDefinition ast]:
-    P='def' 'main' '(' ')' ':' '{' funcStatements '}' {$ast=new FuncDefinition($funcStatements.ast,
-   new FunctionType(new ArrayList<VarDefinition>(),VoidType.getInstance(),$P.getLine(), $P.getCharPositionInLine()+1),"main",
+    P='def' 'main' T='(' ')' ':' '{' funcStatements '}' {$ast=new FuncDefinition($funcStatements.ast,
+   new FunctionType(new ArrayList<VarDefinition>(),VoidType.getInstance(),$T.getLine(), $T.getCharPositionInLine()+1),"main",
    $P.getLine(),$P.getCharPositionInLine()+1);}
 ;
 
@@ -37,33 +37,27 @@ funcStatements returns [List<Statement> ast = new ArrayList<Statement>()]:
 
 ;
 
-functionType returns [FunctionType ast]:
-    P='('{List<VarDefinition> params = new ArrayList<VarDefinition>();} (varDefinitions {params.addAll($varDefinitions.ast);}
-    (','varDefinitions {params.addAll($varDefinitions.ast);})*)* ')' ':'{$ast=new FunctionType(params,VoidType.getInstance()
-    ,$P.getLine(),$P.getCharPositionInLine()+1);} (simpleType {$ast=new FunctionType(params,$simpleType.ast,$P.getLine(),
-    $P.getCharPositionInLine()+1);})?
+functionType returns [FunctionType ast] locals [Type localType=VoidType.getInstance()]:
+   P='(' defParameters ')' ':' (simpleType {$localType=$simpleType.ast;} )? {$ast=new FunctionType($defParameters.ast,$localType,$P.getLine(),$P.getCharPositionInLine()+1);}
+
+;
+
+defParameters returns [List<VarDefinition> ast = new ArrayList<VarDefinition>()] :
+    (ID ':'type {$ast.add(new VarDefinition($type.ast,$ID.text,$ID.getLine(),$ID.getCharPositionInLine()+1));})*
 
 ;
 
 
 
-varDefinitions returns [List<VarDefinition> ast = new ArrayList<VarDefinition>()]:
-    {List<String> idsEncontrados=new ArrayList<String>();}
-   ID1=ID {List<String> ids=new ArrayList<String>();ids.add($ID1.text);}
-    (',' ID2=ID {ids.add($ID2.text);})* ':' type  {for(String id: ids)
-    {VarDefinition varDef=new VarDefinition($type.ast,id,$ID1.getLine(),$ID1.getCharPositionInLine()+1); $ast.add(varDef);
-    if(idsEncontrados.contains(id)){ new ErrorType("Definicion de variable duplicada : "+id,$ID2.getLine(),$ID2.getCharPositionInLine()+1);}
-     idsEncontrados.add(id);}}
+varDefinitions returns [List<VarDefinition> ast = new ArrayList<VarDefinition>()] :
+   ids ':' type {for(String id: $ids.ast){VarDefinition var= new VarDefinition ($type.ast,id,id.getLine(),id.getCharPositionInLine()+1);
+   $ast.add(campo);}}
 ;
 
 
-
-
-functionInvocation returns [FunctionInvocation ast]:
-    ID '(' {$ast = new FunctionInvocation(new Variable($ID.text,$ID.getLine(),$ID.getCharPositionInLine()+1),
-   new ArrayList<Expression>(),$ID.getLine(),$ID.getCharPositionInLine()+1 ); } (expressionList {
-   $ast = new FunctionInvocation(new Variable($ID.text,$ID.getLine(),$ID.getCharPositionInLine()+1),
-    $expressionList.ast,$ID.getLine(),$ID.getCharPositionInLine()+1 ); })? ')'
+functionInvocation returns [FunctionInvocation ast] locals [List<Expression> exps = new ArrayList<Expression>()]:
+    ID '('  (expressionList {$exps.addAll($expressionList.ast);} )? ')' {$ast = new FunctionInvocation(new Variable($ID.text,$ID.getLine(),$ID.getCharPositionInLine()+1),
+    exps,$ID.getLine(),$ID.getCharPositionInLine()+1 ); }
 
 ;
 
@@ -73,12 +67,11 @@ expressionList returns [List<Expression> ast = new ArrayList<Expression>()]:
 ;
 
 multiStatement returns [List<Statement> ast = new ArrayList<Statement>()]:
-    ('{' (statement {$ast.add($statement.ast);} )*  '}')
+    '{' (statement {$ast.add($statement.ast);})*  '}'
     | statement {$ast.add($statement.ast);}
 
 
 ;
-
 
 
 statement returns [Statement ast]:
@@ -90,7 +83,7 @@ statement returns [Statement ast]:
     ('else' ms2=multiStatement {$ast= new IfElse($ms1.ast,$ms2.ast,$expression.ast,$P.getLine(),$P.getCharPositionInLine()+1); })?  |
 
     P='while' expression ':'multiStatement {$ast= new While($multiStatement.ast,$expression.ast,$P.getLine(),$P.getCharPositionInLine()+1); } |
-    <assoc=right> exp1=expression '=' exp2=expression ';' {$ast= new Assignment($exp1.ast,$exp2.ast,$exp1.ast.getLine(),$exp1.ast.getColumn()); } |
+    exp1=expression '=' exp2=expression ';' {$ast= new Assignment($exp1.ast,$exp2.ast,$exp1.ast.getLine(),$exp1.ast.getColumn()); } |
     functionInvocation ';' {$ast = $functionInvocation.ast;} |
     P='return' expression';' {$ast= new Return($expression.ast,$P.getLine(),$P.getCharPositionInLine()+1); }
 
@@ -138,22 +131,17 @@ complexType returns [Type ast]:
 ;
 
 
+fields returns [List<RecordField> ast = new ArrayList<RecordField>()] :
 
-fields returns [List<RecordField> ast = new ArrayList<RecordField>()]:
-    {List<String> idsEncontrados=new ArrayList<String>();}
-    (ID1=ID {List<String> ids=new ArrayList<String>();ids.add($ID1.text);}(',' ID2=ID {ids.add($ID2.text);} )* ':' type ';'
-     {for(String id: ids){RecordField campo= new RecordField ($type.ast,id,$ID1.getLine(),$ID1.getCharPositionInLine()+1);
-     $ast.add(campo); if(idsEncontrados.contains(id)){ new ErrorType("Campo duplicado: "+id,$ID1.getLine(),$ID1.getCharPositionInLine()+1);}
-     idsEncontrados.add(id);  }})*
+    ids ':' type ';' {for(String id: $ids.ast){RecordField campo= new RecordField ($type.ast,id,id.getLine(),id.getCharPositionInLine()+1);
+    $ast.add(campo);}}
 
  ;
 
+ids returns [List<String> ast = new ArrayList<String>()]:
+    ID1=ID{ids.add($ID1.text);} (',' ID2=ID {ids.add($ID2.text);})*
 
-
-
-
-
-
+;
 
 
 fragment
@@ -185,4 +173,3 @@ CHAR_CONSTANT: (('\''.'\'') | ('\'''\\'DIGITO+'\'') | ('\'\\n\'')|('\'\\t\''))
 
 ID: LETRA | (LETRA|'_')(LETRA|DIGITO|'_')+
 ;
-
