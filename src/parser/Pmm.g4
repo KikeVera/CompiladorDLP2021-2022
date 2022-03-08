@@ -37,27 +37,27 @@ funcStatements returns [List<Statement> ast = new ArrayList<Statement>()]:
 
 ;
 
-functionType returns [FunctionType ast] locals [Type localType=VoidType.getInstance()]:
-   P='(' defParameters ')' ':' (simpleType {$localType=$simpleType.ast;} )? {$ast=new FunctionType($defParameters.ast,$localType,$P.getLine(),$P.getCharPositionInLine()+1);}
+functionType returns [FunctionType ast] locals [Type localType=VoidType.getInstance(),List<VarDefinition> vars = new ArrayList<VarDefinition>() ]:
+   P='(' (defParameters {$vars.addAll($defParameters.ast);})?  ')' ':' (simpleType {$localType=$simpleType.ast;} )?
+   {$ast=new FunctionType($vars,$localType,$P.getLine(),$P.getCharPositionInLine()+1);}
 
 ;
 
 defParameters returns [List<VarDefinition> ast = new ArrayList<VarDefinition>()] :
-    (ID ':'type {$ast.add(new VarDefinition($type.ast,$ID.text,$ID.getLine(),$ID.getCharPositionInLine()+1));})*
-
+    ID1=ID ':' type {$ast.add(new VarDefinition($type.ast,$ID1.text,$ID1.getLine(),$ID1.getCharPositionInLine()+1));}
+    (',' ID2=ID ':' type {$ast.add(new VarDefinition($type.ast,$ID2.text,$ID2.getLine(),$ID2.getCharPositionInLine()+1));} )*
 ;
 
 
 
 varDefinitions returns [List<VarDefinition> ast = new ArrayList<VarDefinition>()] :
-   ids ':' type {for(String id: $ids.ast){VarDefinition var= new VarDefinition ($type.ast,id,id.getLine(),id.getCharPositionInLine()+1);
-   $ast.add(campo);}}
+   ids ':' type {for(Variable var: $ids.ast){$ast.add(new VarDefinition ($type.ast,var.getName(),var.getLine(),var.getColumn()));}}
 ;
 
 
 functionInvocation returns [FunctionInvocation ast] locals [List<Expression> exps = new ArrayList<Expression>()]:
     ID '('  (expressionList {$exps.addAll($expressionList.ast);} )? ')' {$ast = new FunctionInvocation(new Variable($ID.text,$ID.getLine(),$ID.getCharPositionInLine()+1),
-    exps,$ID.getLine(),$ID.getCharPositionInLine()+1 ); }
+    $exps,$ID.getLine(),$ID.getCharPositionInLine()+1 ); }
 
 ;
 
@@ -95,7 +95,7 @@ expression returns [Expression ast]:
 
     '('expression')' {$ast=$expression.ast;}|
      array=expression '['access=expression']' {$ast = new ArrayAccess($array.ast, $access.ast,$array.ast.getLine(),$array.ast.getColumn());}|
-     exp1=expression '.' ID {$ast = new FieldAcess($exp1.ast,$ID.text,$exp1.ast.getLine(),$exp1.ast.getColumn());} |
+     exp1=expression '.' ID {$ast = new FieldAccess($exp1.ast,$ID.text,$exp1.ast.getLine(),$exp1.ast.getColumn());} |
     '('simpleType')'exp1=expression  {$ast = new Cast($exp1.ast,$simpleType.ast,$exp1.ast.getLine(),$exp1.ast.getColumn());}|
     '-' exp1=expression {$ast = new UnaryMinus($exp1.ast,$exp1.ast.getLine(),$exp1.ast.getColumn());} |
     '!' exp1=expression {$ast = new Negation($exp1.ast,$exp1.ast.getLine(),$exp1.ast.getColumn());} |
@@ -133,13 +133,14 @@ complexType returns [Type ast]:
 
 fields returns [List<RecordField> ast = new ArrayList<RecordField>()] :
 
-    ids ':' type ';' {for(String id: $ids.ast){RecordField campo= new RecordField ($type.ast,id,id.getLine(),id.getCharPositionInLine()+1);
-    $ast.add(campo);}}
+    (ids ':' type ';' {for(Variable var: $ids.ast){RecordField campo= new RecordField ($type.ast,var.getName(),var.getLine(),var.getColumn());
+    $ast.add(campo);}})*
 
  ;
 
-ids returns [List<String> ast = new ArrayList<String>()]:
-    ID1=ID{ids.add($ID1.text);} (',' ID2=ID {ids.add($ID2.text);})*
+ids returns [List<Variable> ast = new ArrayList<Variable>()]:
+    ID1=ID{$ast.add(new Variable($ID1.text,$ID1.getLine(),$ID1.getCharPositionInLine()+1)); }
+    (',' ID2=ID {$ast.add(new Variable($ID1.text,$ID2.getLine(),$ID2.getCharPositionInLine()+1));})*
 
 ;
 
