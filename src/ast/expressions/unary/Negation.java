@@ -3,6 +3,7 @@ package ast.expressions.unary;
 import ast.expressions.Expression;
 import semantic.Visitor;
 
+
 public class Negation extends UnaryExpression {
 
 
@@ -19,9 +20,10 @@ public class Negation extends UnaryExpression {
                 '}';
     }
 
-    @Override
-    public Object accept(Visitor visitor, Object param) {
-        visitor.visit(this,param);
-        return null;
+    public <TP, TR> TR accept(Visitor<TP,TR> visitor, TP param) {
+        return visitor.visit(this,param);
     }
+
+
+
 }

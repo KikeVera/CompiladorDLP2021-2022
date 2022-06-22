@@ -1,4 +1,4 @@
-// Generated from C:/Users/Kike/IdeaProjects/DLPPracticas/src/parser\Pmm.g4 by ANTLR 4.9.1
+// Generated from C:/Users/UO246711/Desktop/DLPPracticas2022/src/parser\Pmm.g4 by ANTLR 4.9.2
 package parser;
 
 import ast.*;
@@ -9,7 +9,7 @@ import ast.expressions.unary.*;
 import ast.definitions.*;
 import ast.statements.*;
 import ast.types.*;
-import errorHandler.*;
+
 
 
 import org.antlr.v4.runtime.tree.ParseTreeListener;
@@ -79,6 +79,16 @@ public interface PmmListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	void exitFunctionType(PmmParser.FunctionTypeContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link PmmParser#defParameters}.
+	 * @param ctx the parse tree
+	 */
+	void enterDefParameters(PmmParser.DefParametersContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link PmmParser#defParameters}.
+	 * @param ctx the parse tree
+	 */
+	void exitDefParameters(PmmParser.DefParametersContext ctx);
 	/**
 	 * Enter a parse tree produced by {@link PmmParser#varDefinitions}.
 	 * @param ctx the parse tree
@@ -179,4 +189,14 @@ public interface PmmListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	void exitFields(PmmParser.FieldsContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link PmmParser#ids}.
+	 * @param ctx the parse tree
+	 */
+	void enterIds(PmmParser.IdsContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link PmmParser#ids}.
+	 * @param ctx the parse tree
+	 */
+	void exitIds(PmmParser.IdsContext ctx);
 }

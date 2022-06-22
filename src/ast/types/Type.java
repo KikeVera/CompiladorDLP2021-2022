@@ -6,20 +6,22 @@ import ast.expressions.Expression;
 import java.util.List;
 
 public interface Type extends ASTNode {
-
     boolean isLogical();
     boolean isBuiltInType();
-    Type arithmetic(Type right);
-    Type arithmetic();
-    Type comparison(Type right);
-    Type logic(Type right);
-    Type logic();
-    Type promotesTo(Type left);
-    Type canBeCastTo(Type right);
-    Type squareBrackets(Type array);
-    Type dot(String campo);
-    Type parenthesis(List<Expression> list);
-    int numberOfBytes() ;
+    Type arithmetic(Type right,ASTNode campo);
+    Type arithmetic(ASTNode campo);
+    Type comparison(Type right ,ASTNode campo);
+    Type logic(Type right,ASTNode campo);
+    Type logic(ASTNode campo);
+    Type promotesTo(Type left,ASTNode campo);
+    Type canBeCastTo(Type right,ASTNode campo);
+    Type squareBrackets(Type array,ASTNode campo);
+    Type dot(String campo,ASTNode node);
+    Type parenthesis(List<Expression> list,ASTNode campo);
+    int numberOfBytes();
     char getSuffix();
-    boolean isLvalue();
+
+
+
+
 }

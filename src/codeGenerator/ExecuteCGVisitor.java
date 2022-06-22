@@ -11,13 +11,13 @@ import ast.types.FunctionType;
 import ast.types.VoidType;
 
 
-public class ExecuteCGVisitor extends AbstractCGVisitor {
+public class ExecuteCGVisitor extends AbstractCGVisitor<FuncDefinition,Void> {
 
-    private CodeGenerator codeGenerator;
-    private AddressCGVisitor addressCGVisitor;
-    private ValueCGVisitor valueCGVisitor;
-    private FunctionType functionType;
-    private int localVariablesBytes;
+    private final CodeGenerator codeGenerator;
+    private final AddressCGVisitor addressCGVisitor;
+    private final ValueCGVisitor valueCGVisitor;
+
+
 
 
 
@@ -46,7 +46,7 @@ public class ExecuteCGVisitor extends AbstractCGVisitor {
     */
 
     @Override
-    public Object visit(Program campo, Object param) {
+    public Void visit(Program campo, FuncDefinition param) {
         for(Definition definition:campo.getDefinitions()){
             if(definition instanceof VarDefinition){
                 definition.accept(this,param);
@@ -74,11 +74,12 @@ public class ExecuteCGVisitor extends AbstractCGVisitor {
     */
 
     @Override
-    public Object visit(Print campo, Object param) {
-        codeGenerator.line(campo.getLine());
-        codeGenerator.comment("* Print");
+    public Void visit(Print campo, FuncDefinition param) {
+
         for(Expression expression :campo.getExpressions()){
-            expression.accept(this.valueCGVisitor,param);
+            codeGenerator.line(campo.getLine());
+            codeGenerator.comment("* Print");
+            expression.accept(this.valueCGVisitor,null);
             codeGenerator.out(expression.getType());
 
         }
@@ -97,11 +98,11 @@ public class ExecuteCGVisitor extends AbstractCGVisitor {
     */
 
     @Override
-    public Object visit(Input campo, Object param) {
+    public Void visit(Input campo, FuncDefinition param) {
         codeGenerator.line(campo.getLine());
         codeGenerator.comment("* Input");
         for(Expression expression :campo.getExpressions()){
-            expression.accept(this.addressCGVisitor,param);
+            expression.accept(this.addressCGVisitor,null);
             codeGenerator.in(expression.getType());
             codeGenerator.store(expression.getType());
 
@@ -121,11 +122,11 @@ public class ExecuteCGVisitor extends AbstractCGVisitor {
     */
 
     @Override
-    public Object visit(Assignment campo, Object param) {
+    public Void visit(Assignment campo, FuncDefinition param) {
         codeGenerator.line(campo.getLine());
         codeGenerator.comment("* Assignment");
-        campo.getExpressionIzq().accept(this.addressCGVisitor,param);
-        campo.getExpressionDer().accept(this.valueCGVisitor,param);
+        campo.getExpressionIzq().accept(this.addressCGVisitor,null);
+        campo.getExpressionDer().accept(this.valueCGVisitor,null);
         codeGenerator.store(campo.getExpressionIzq().getType());
         return null;
     }
@@ -134,18 +135,15 @@ public class ExecuteCGVisitor extends AbstractCGVisitor {
 
     /*
     execute[[VarDefinition : Definition -> ID:String type:Type offset:int ]]()
-        <enter> type.numberOfBytes
+        comentario
 
     */
 
 
     @Override
-    public Object visit(VarDefinition campo, Object param) {
+    public Void visit(VarDefinition campo, FuncDefinition param) {
         codeGenerator.comment("* "+campo.getType()+" "+campo.getName()+" (offset "+campo.getOffset()+")");
-        if(campo.getScope()>0){
 
-            localVariablesBytes+=campo.getType().numberOfBytes();
-        }
 
         return null;
 
@@ -170,31 +168,32 @@ public class ExecuteCGVisitor extends AbstractCGVisitor {
     */
 
     @Override
-    public Object visit(FuncDefinition campo, Object param) {
+    public Void visit(FuncDefinition campo, FuncDefinition param) {
         codeGenerator.line(campo.getLine());
         codeGenerator.comment("* Function Definition");
         codeGenerator.defineLabel(campo.getName());
         codeGenerator.comment("* Parameters");
         campo.getType().accept(this,null);
-
         codeGenerator.comment("* LocalVariables");
-        localVariablesBytes=0;
+
 
         for(Statement statement: campo.getStatements()){
             if(statement instanceof  VarDefinition)
                 statement.accept(this,param);
 
         }
-        this.codeGenerator.enter(this.localVariablesBytes);
+        this.codeGenerator.enter(campo.offSetLocal);
 
         for(Statement statement: campo.getStatements()){
             if(!(statement instanceof  VarDefinition))
-                statement.accept(this,campo.getType());
+                statement.accept(this,campo);
 
         }
 
-        if(((FunctionType)campo.getType()).getReturnType().equals(VoidType.getInstance()))
-         this.codeGenerator.ret(functionType,localVariablesBytes);
+
+
+
+        this.codeGenerator.ret((FunctionType) campo.getType(),campo.offSetLocal );
 
         return null;
 
@@ -209,14 +208,14 @@ public class ExecuteCGVisitor extends AbstractCGVisitor {
     */
 
     @Override
-    public Object visit(FunctionType campo, Object param) {
+    public Void visit(FunctionType campo, FuncDefinition param) {
 
         for(VarDefinition varDefinition:campo.getParams()){
             varDefinition.accept(this,param);
 
 
         }
-        this.functionType=campo;
+
         return null;
     }
 
@@ -235,13 +234,13 @@ public class ExecuteCGVisitor extends AbstractCGVisitor {
     */
 
     @Override
-    public Object visit(While campo, Object param) {
+    public Void visit(While campo, FuncDefinition param) {
         codeGenerator.line(campo.getLine());
         codeGenerator.comment("* While");
         int label=codeGenerator.getLabel();
         int end=codeGenerator.getLabel();
         codeGenerator.defineLabel("label"+label);
-        campo.getCondition().accept(valueCGVisitor,param);
+        campo.getCondition().accept(valueCGVisitor,null);
         codeGenerator.jz("label"+end);
         for(Statement statement:campo.getWhileST()){
             statement.accept(this,param);
@@ -271,16 +270,17 @@ public class ExecuteCGVisitor extends AbstractCGVisitor {
     */
 
     @Override
-    public Object visit(IfElse campo, Object param) {
+    public Void visit(IfElse campo, FuncDefinition param) {
         codeGenerator.line(campo.getLine());
         codeGenerator.comment("* IfElse");
         int label=codeGenerator.getLabel();
         int end=codeGenerator.getLabel();
-        campo.getCondition().accept(valueCGVisitor,param);
+        campo.getCondition().accept(valueCGVisitor,null);
         codeGenerator.jz("label"+label);
         for (Statement statement:campo.getIfSt()){
             statement.accept(this,param);
         }
+
         codeGenerator.jmp("label"+end);
         codeGenerator.defineLabel("label"+label);
         for (Statement statement:campo.getElseSt()){
@@ -301,10 +301,10 @@ public class ExecuteCGVisitor extends AbstractCGVisitor {
 
 
     @Override
-    public Object visit(FunctionInvocation campo, Object param) {
+    public Void visit(FunctionInvocation campo, FuncDefinition param) {
         codeGenerator.line(campo.getLine());
         codeGenerator.comment("* Function Invocation");
-        campo.accept(this.valueCGVisitor,param);
+        campo.accept(this.valueCGVisitor,null);
         if(!campo.getType().equals(VoidType.getInstance())){
             this.codeGenerator.pop(campo.getType());
         }
@@ -321,11 +321,12 @@ public class ExecuteCGVisitor extends AbstractCGVisitor {
     */
 
     @Override
-    public Object visit(Return campo, Object param) {
+    public Void visit(Return campo, FuncDefinition param) {
         codeGenerator.line(campo.getLine());
         codeGenerator.comment("* Return");
-        campo.getExpression().accept(this.valueCGVisitor,param);
-        this.codeGenerator.ret((FunctionType)param,localVariablesBytes );
+        campo.getExpression().accept(this.valueCGVisitor,null);
+
+
 
         return null;
 

@@ -3,9 +3,7 @@ package ast;
 import semantic.Visitor;
 
 public interface ASTNode {
-
-    int getLine();
-    int getColumn();
-    Object accept(Visitor visitor, Object param);
-
+    public int getLine();
+    public int getColumn();
+    public <TP,TR> TR accept(Visitor <TP,TR> visitor,TP param);
 }

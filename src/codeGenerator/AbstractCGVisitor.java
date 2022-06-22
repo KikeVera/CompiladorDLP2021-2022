@@ -3,7 +3,7 @@ package codeGenerator;
 import ast.FunctionInvocation;
 import ast.Program;
 import ast.RecordField;
-import ast.definitions.Definition;
+
 import ast.definitions.FuncDefinition;
 import ast.definitions.VarDefinition;
 import ast.expressions.*;
@@ -20,161 +20,166 @@ import ast.types.*;
 import semantic.Visitor;
 
 
-public abstract class AbstractCGVisitor implements Visitor {
+public abstract class AbstractCGVisitor<TP,TR> implements Visitor<TP,TR> {
 
 
 
     @Override
-    public Object visit(Program campo, Object param) {
+    public TR visit(Program campo, TP param) {
         throw new IllegalStateException("Generación de código no definida para \"Program\"");
     }
     @Override
-    public Object visit(FuncDefinition campo, Object param) {
+    public TR visit(FuncDefinition campo, TP param) {
 
         throw new IllegalStateException("Generación de código no definida para \"FuncDefinition\"");
     }
 
 
     @Override
-    public Object visit(VarDefinition campo, Object param) {
+    public TR visit(VarDefinition campo, TP param) {
         throw new IllegalStateException("Generación de código no definida para \"VarDefinition\"");
     }
 
     @Override
-    public Object visit(CharLiteral campo, Object param) {
+    public TR visit(CharLiteral campo, TP param) {
 
         throw new IllegalStateException("Generación de código no definida para \"CharLiteral\"");
     }
 
     @Override
-    public Object visit(DoubleLiteral campo, Object param) {
+    public TR visit(DoubleLiteral campo, TP param) {
 
         throw new IllegalStateException("Generación de código no definida para \"DoubleLiteral\"");
     }
 
     @Override
-    public Object visit(IntLiteral campo, Object param) {
+    public TR visit(IntLiteral campo, TP param) {
 
         throw new IllegalStateException("Generación de código no definida para \"IntLiteral\"");
     }
 
     @Override
-    public Object visit(Arithmetic campo, Object param) {
+    public TR visit(Arithmetic campo, TP param) {
         throw new IllegalStateException("Generación de código no definida para \"Arithmetic\"");
     }
 
     @Override
-    public Object visit(Comparison campo, Object param) {
+    public TR visit(Comparison campo, TP param) {
         throw new IllegalStateException("Generación de código no definida para \"Comparision\"");
     }
 
     @Override
-    public Object visit(Logic campo, Object param) {
+    public TR visit(Logic campo, TP param) {
         throw new IllegalStateException("Generación de código no definida para \"Logic\"");
     }
 
     @Override
-    public Object visit(Negation campo, Object param) {
+    public TR visit(Negation campo, TP param) {
         throw new IllegalStateException("Generación de código no definida para \"Negation\"");
     }
 
     @Override
-    public Object visit(UnaryMinus campo, Object param) {
+    public TR visit(UnaryMinus campo, TP param) {
         throw new IllegalStateException("Generación de código no definida para \"UnaryMinus\"");
     }
 
     @Override
-    public Object visit(ArrayAccess campo, Object param) {
+    public TR visit(ArrayAccess campo, TP param) {
         throw new IllegalStateException("Generación de código no definida para \"ArrayAcess\"");
     }
 
     @Override
-    public Object visit(Cast campo, Object param) {
+    public TR visit(Cast campo, TP param) {
         throw new IllegalStateException("Generación de código no definida para \"Cast\"");
     }
 
     @Override
-    public Object visit(FieldAcess campo, Object param) {
+    public TR visit(FieldAccess campo, TP param) {
         throw new IllegalStateException("Generación de código no definida para \"FieldAcess\"");
     }
 
     @Override
-    public Object visit(Variable campo, Object param) {
+    public TR visit(Variable campo, TP param) {
         throw new IllegalStateException("Generación de código no definida para \"Variable\"");
     }
 
     @Override
-    public Object visit(FunctionInvocation campo, Object param) {
+    public TR visit(FunctionInvocation campo, TP param) {
         throw new IllegalStateException("Generación de código no definida para \"FunctionInvocation\"");
     }
 
     @Override
-    public Object visit(Assignment campo, Object param) {
+    public TR visit(Assignment campo, TP param) {
         throw new IllegalStateException("Generación de código no definida para \"Assignment\"");
     }
 
     @Override
-    public Object visit(IfElse campo, Object param) {
+    public TR visit(IfElse campo, TP param) {
         throw new IllegalStateException("Generación de código no definida para \"IfElse\"");
     }
 
     @Override
-    public Object visit(Input campo, Object param) {
+    public TR visit(Input campo, TP param) {
         throw new IllegalStateException("Generación de código no definida para \"Input\"");
     }
 
     @Override
-    public Object visit(Print campo, Object param) {
+    public TR visit(Print campo, TP param) {
         throw new IllegalStateException("Generación de código no definida para \"Print\"");
     }
 
     @Override
-    public Object visit(Return campo, Object param) {
+    public TR visit(Return campo, TP param) {
         throw new IllegalStateException("Generación de código no definida para \"Return\"");
     }
 
     @Override
-    public Object visit(While campo, Object param) {
+    public TR visit(While campo, TP param) {
         throw new IllegalStateException("Generación de código no definida para \"While\"");
     }
 
     @Override
-    public Object visit(ArrayType campo, Object param) {
+    public TR visit(ArrayType campo, TP param) {
         throw new IllegalStateException("Generación de código no definida para \"ArrayType\"");
     }
 
     @Override
-    public Object visit(CharType campo, Object param) {
+    public TR visit(CharType campo, TP param) {
         throw new IllegalStateException("Generación de código no definida para \"CharType\"");
     }
 
     @Override
-    public Object visit(DoubleType campo, Object param) {
+    public TR visit(DoubleType campo, TP param) {
         throw new IllegalStateException("Generación de código no definida para \"DoubleType\"");
     }
 
     @Override
-    public Object visit(FunctionType campo, Object param) {
+    public TR visit(FunctionType campo, TP param) {
         throw new IllegalStateException("Generación de código no definida para \"FunctionType\"");
     }
 
     @Override
-    public Object visit(IntType campo, Object param) {
+    public TR visit(IntType campo, TP param) {
         throw new IllegalStateException("Generación de código no definida para \"IntType\"");
     }
 
     @Override
-    public Object visit(RecordType campo, Object param) {
+    public TR visit(RecordType campo, TP param) {
         throw new IllegalStateException("Generación de código no definida para \"RecordType\"");
     }
 
     @Override
-    public Object visit(VoidType campo, Object param) {
+    public TR visit(VoidType campo, TP param) {
         throw new IllegalStateException("Generación de código no definida para \"VoidType\"");
     }
 
     @Override
-    public Object visit(RecordField campo, Object param) {
+    public TR visit(RecordField campo, TP param) {
         throw new IllegalStateException("Generación de código no definida para \"RecordField\"");
+    }
+
+    @Override
+    public TR visit(ErrorType campo, TP param) {
+        throw new IllegalStateException("Generación de código no definida para \"ErrorType\"");
     }
 }

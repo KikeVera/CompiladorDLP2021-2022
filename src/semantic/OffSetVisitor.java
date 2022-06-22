@@ -1,37 +1,37 @@
 package semantic;
 
 import ast.RecordField;
-import ast.definitions.Definition;
+
 import ast.definitions.FuncDefinition;
 import ast.definitions.VarDefinition;
-import ast.expressions.Variable;
+
 import ast.statements.Statement;
 import ast.types.FunctionType;
 import ast.types.RecordType;
-import errorHandler.ErrorType;
-import semantic.symboltable.SymbolTable;
 
-public class OffSetVisitor extends AbstractVisitor {
 
-    SymbolTable symbolTable= new SymbolTable();
+public class OffSetVisitor extends AbstractVisitor<Void,Void> {
+
+
     int offSetGlobal=0;
     int offSetLocal=0;
 
     @Override
-    public Object visit(FuncDefinition campo, Object param) {
-
-       campo.getType().accept(this,param);
+    public Void visit(FuncDefinition campo, Void param) {
+        offSetLocal=0;
+        campo.getType().accept(this,param);
         for(Statement statement:campo.getStatements()){
             statement.accept(this,param);
         }
-       offSetLocal=0;
-        return defaultMethod();
+
+        campo.offSetLocal=-1*offSetLocal;
+        return null;
     }
 
 
 
     @Override
-    public Object visit(VarDefinition campo, Object param) {
+    public Void visit(VarDefinition campo, Void param) {
         campo.getType().accept(this,param);
         if(campo.getScope()==0){
             campo.setOffset(offSetGlobal);
@@ -47,11 +47,11 @@ public class OffSetVisitor extends AbstractVisitor {
 
 
 
-        return defaultMethod();
+        return null;
     }
 
     @Override
-    public Object visit(FunctionType campo, Object param) {
+    public Void visit(FunctionType campo, Void param) {
         campo.getReturnType().accept(this,null);
 
         int cont=4;
@@ -62,18 +62,18 @@ public class OffSetVisitor extends AbstractVisitor {
 
         }
 
-        return defaultMethod();
+        return null;
     }
 
     @Override
-    public Object visit(RecordType campo, Object param) {
+    public Void visit(RecordType campo, Void param) {
         int cont=0;
         for(RecordField field: campo.getFields()){
             field.setOffset(cont);
             cont+=field.getType().numberOfBytes();
         }
 
-        return defaultMethod();
+        return null;
     }
 
 

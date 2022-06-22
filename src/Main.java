@@ -1,7 +1,6 @@
-
 import codeGenerator.CodeGenerator;
 import codeGenerator.ExecuteCGVisitor;
-import errorHandler.ErrorHandler;
+import errorhandler.ErrorHandler;
 import parser.*;
 
 import org.antlr.v4.runtime.*;
@@ -9,48 +8,41 @@ import org.antlr.v4.runtime.*;
 import ast.Program;
 import introspector.model.IntrospectorModel;
 import introspector.view.IntrospectorTree;
+import semantic.IdentificationVisitor;
 import semantic.OffSetVisitor;
 import semantic.TypeCheckingVisitor;
-import semantic.ScopeVisitor;
 
 public class Main {
 	
 	public static void main(String... args) throws Exception {
-
 		   if (args.length<1) {
 		        System.err.println("Please, pass me the input file.");
 		        return;
 		    }
-
+		   		 			
 		 // create a lexer that feeds off of input CharStream
-
 		CharStream input = CharStreams.fromFileName(args[0]);
 		PmmLexer lexer = new PmmLexer(input);
 
 		// create a parser that feeds off the tokens buffer
-		CommonTokenStream tokens = new CommonTokenStream(lexer);
-		PmmParser parser = new PmmParser(tokens);
+		CommonTokenStream tokens = new CommonTokenStream(lexer); 
+		PmmParser parser = new PmmParser(tokens);	
 		Program ast = parser.program().ast;
-		ast.accept(new ScopeVisitor(),null);
-		ast.accept(new TypeCheckingVisitor(),null);
 
+		ast.accept(new IdentificationVisitor(), null);
+		ast.accept(new TypeCheckingVisitor(),null);
+		ast.accept(new OffSetVisitor(),null);
+
+		// * Check errors
 		if(ErrorHandler.getInstance().hasAnyErrors()){
+			// * Show errors
 			ErrorHandler.getInstance().showErrors(System.err);
 		}
-
-
-		else {
+		else{
 			// * The AST is shown
-			ast.accept(new OffSetVisitor(),null);
 			ast.accept(new ExecuteCGVisitor(new CodeGenerator(args[1],args[0])),null);
-			IntrospectorModel model = new IntrospectorModel("Program", ast);
+			IntrospectorModel model=new IntrospectorModel("Program", ast);
 			new IntrospectorTree("Introspector", model);
 		}
-
 	}
-
 }
-
-
-
-

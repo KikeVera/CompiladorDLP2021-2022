@@ -10,8 +10,10 @@ import ast.expressions.operators.Comparison;
 import ast.expressions.operators.Logic;
 import ast.expressions.unary.Negation;
 import ast.expressions.unary.UnaryMinus;
+import ast.types.CharType;
+import ast.types.IntType;
 
-public class ValueCGVisitor extends AbstractCGVisitor {
+public class ValueCGVisitor extends AbstractCGVisitor<Void,Void> {
 
     private CodeGenerator codeGenerator;
     private AddressCGVisitor addressCGVisitor;
@@ -31,7 +33,7 @@ public class ValueCGVisitor extends AbstractCGVisitor {
     */
 
     @Override
-    public Object visit(Variable campo, Object param) {
+    public Void visit(Variable campo, Void param) {
         campo.accept(this.addressCGVisitor,param);
         codeGenerator.load(campo.getType());
 
@@ -45,7 +47,7 @@ public class ValueCGVisitor extends AbstractCGVisitor {
     */
 
     @Override
-    public Object visit(CharLiteral campo, Object param) {
+    public Void visit(CharLiteral campo, Void param) {
 
         codeGenerator.push(campo.getValue());
         return null;
@@ -58,7 +60,7 @@ public class ValueCGVisitor extends AbstractCGVisitor {
     */
 
     @Override
-    public Object visit(DoubleLiteral campo, Object param) {
+    public Void visit(DoubleLiteral campo, Void param) {
 
         codeGenerator.push(campo.getValue());
         return null;
@@ -71,7 +73,7 @@ public class ValueCGVisitor extends AbstractCGVisitor {
     */
 
     @Override
-    public Object visit(IntLiteral campo, Object param) {
+    public Void visit(IntLiteral campo, Void param) {
 
          codeGenerator.push(campo.getValue());
          return null;
@@ -95,9 +97,13 @@ public class ValueCGVisitor extends AbstractCGVisitor {
     */
 
     @Override
-    public Object visit(Arithmetic campo, Object param) {
+    public Void visit(Arithmetic campo, Void param) {
         campo.getExpressionIzq().accept(this,null);
+        if(campo.getExpressionIzq().getType().equals(CharType.getInstance()))
+            codeGenerator.convert(CharType.getInstance(), IntType.getInstance());
         campo.getExpressionDer().accept(this,null);
+        if(campo.getExpressionDer().getType().equals(CharType.getInstance()))
+            codeGenerator.convert(CharType.getInstance(), IntType.getInstance());
         if(campo.getOperator().equals("+"))
             codeGenerator.add(campo.getType());
         if(campo.getOperator().equals("-"))
@@ -132,9 +138,13 @@ public class ValueCGVisitor extends AbstractCGVisitor {
     */
 
     @Override
-    public Object visit(Comparison campo, Object param) {
+    public Void visit(Comparison campo, Void param) {
         campo.getExpressionIzq().accept(this,null);
+        if(campo.getExpressionIzq().getType().equals(CharType.getInstance()))
+            codeGenerator.convert(CharType.getInstance(), IntType.getInstance());
         campo.getExpressionDer().accept(this,null);
+        if(campo.getExpressionDer().getType().equals(CharType.getInstance()))
+            codeGenerator.convert(CharType.getInstance(), IntType.getInstance());
 
         if(campo.getOperator().equals(">"))
             codeGenerator.gt(campo.getType());
@@ -163,7 +173,7 @@ public class ValueCGVisitor extends AbstractCGVisitor {
     */
 
     @Override
-    public Object visit(Logic campo, Object param) {
+    public Void visit(Logic campo, Void param) {
         campo.getExpressionIzq().accept(this,null);
         campo.getExpressionDer().accept(this,null);
         if(campo.getOperator().equals("&&"))
@@ -182,7 +192,7 @@ public class ValueCGVisitor extends AbstractCGVisitor {
     */
 
     @Override
-    public Object visit(Negation campo, Object param) {
+    public Void visit(Negation campo, Void param) {
         campo.getExpression().accept(this,param);
         codeGenerator.not();
         return null;
@@ -199,7 +209,7 @@ public class ValueCGVisitor extends AbstractCGVisitor {
     */
 
     @Override
-    public Object visit(UnaryMinus campo, Object param) {
+    public Void visit(UnaryMinus campo, Void param) {
         campo.getExpression().accept(this,param);
         this.codeGenerator.push(-1);
         this.codeGenerator.mul(campo.getType());
@@ -214,7 +224,7 @@ public class ValueCGVisitor extends AbstractCGVisitor {
     */
 
     @Override
-    public Object visit(ArrayAccess campo, Object param) {
+    public Void visit(ArrayAccess campo, Void param) {
         campo.accept(addressCGVisitor,param);
         codeGenerator.load(campo.getType());
         return null;
@@ -243,7 +253,7 @@ public class ValueCGVisitor extends AbstractCGVisitor {
     */
 
     @Override
-    public Object visit(Cast campo, Object param) {
+    public Void visit(Cast campo, Void param) {
         campo.getExpression().accept(this,null);
         codeGenerator.convert(campo.getExpression().getType(),campo.getCastType());
         return null;
@@ -257,7 +267,7 @@ public class ValueCGVisitor extends AbstractCGVisitor {
     */
 
     @Override
-    public Object visit(FieldAcess campo, Object param) {
+    public Void visit(FieldAccess campo, Void param) {
         campo.accept(this.addressCGVisitor,param);
         this.codeGenerator.load(campo.getType());
         return null;
@@ -271,7 +281,7 @@ public class ValueCGVisitor extends AbstractCGVisitor {
     */
 
     @Override
-    public Object visit(FunctionInvocation campo, Object param) {
+    public Void visit(FunctionInvocation campo, Void param) {
        for(Expression arg:campo.getParams()){
            arg.accept(this,param);
        }

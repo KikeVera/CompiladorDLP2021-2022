@@ -1,5 +1,7 @@
 package ast.types;
 
+
+import ast.ASTNode;
 import semantic.Visitor;
 
 public class ArrayType extends TypeNode {
@@ -16,26 +18,22 @@ public class ArrayType extends TypeNode {
     public Type getType() {
         return type;
     }
-
     public int getDimension() {
         return dimension;
     }
 
     @Override
-    public Type squareBrackets(Type array){
+    public Type squareBrackets(Type array, ASTNode campo){
         if(array.equals(IntType.getInstance())){
             return this.getType();
         }
 
-        return null;
+        return super.squareBrackets(array,campo);
     }
 
-    public int numberOfBytes(){
+    @Override
+    public int numberOfBytes()  {
         return type.numberOfBytes()*dimension;
-    }
-
-    public boolean isLvalue(){
-        return true;
     }
 
     @Override
@@ -46,11 +44,8 @@ public class ArrayType extends TypeNode {
                 '}';
     }
 
-
-
-
-    @Override
-    public Object accept(Visitor visitor, Object param) {
+    public <TP, TR> TR accept(Visitor<TP,TR> visitor, TP param) {
         return visitor.visit(this,param);
     }
+
 }

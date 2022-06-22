@@ -5,10 +5,8 @@ import semantic.Visitor;
 
 public class Logic extends OperatorExpression {
 
-
-    public Logic(Expression expressionIzq, Expression expressionDer, String operator,int line,int column){
-        super(expressionIzq, expressionDer, operator, line, column);
-
+    public Logic(Expression expIzq, Expression expDer, String operator, int line, int column){
+        super(expIzq,expDer,operator,line,column);
     }
 
     @Override
@@ -20,8 +18,7 @@ public class Logic extends OperatorExpression {
                 '}';
     }
 
-    @Override
-    public Object accept(Visitor visitor, Object param) {
+    public <TP, TR> TR accept(Visitor<TP,TR> visitor, TP param) {
         return visitor.visit(this,param);
     }
 }

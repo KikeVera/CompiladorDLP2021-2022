@@ -3,14 +3,17 @@ package ast;
 import ast.types.Type;
 import semantic.Visitor;
 
+import java.util.Objects;
+
+
 public class RecordField implements ASTNode {
 
 
     Type type;
-    int offset;
     String name;
     int line;
     int column;
+    int offset;
 
     public RecordField(Type type, String name,int line,int column) {
         this.type=type;
@@ -29,12 +32,13 @@ public class RecordField implements ASTNode {
         return column;
     }
 
+
+
     public Type getType() {
         return type;
     }
 
     public int getOffset() {
-
         return offset;
     }
 
@@ -50,13 +54,24 @@ public class RecordField implements ASTNode {
     public String toString() {
         return "RecordField{" +
                 "type=" + type +
-                ", offset=" + offset +
                 ", name='" + name + '\'' +
                 '}';
     }
 
-    @Override
-    public Object accept(Visitor visitor, Object param) {
+    public <TP, TR> TR accept(Visitor <TP,TR> visitor, TP param) {
         return visitor.visit(this,param);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        RecordField that = (RecordField) o;
+        return Objects.equals(name, that.name);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(name);
     }
 }

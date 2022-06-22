@@ -3,6 +3,7 @@ package ast.statements;
 import ast.expressions.Expression;
 import semantic.Visitor;
 
+
 import java.util.List;
 
 public class IfElse extends StatementNode {
@@ -42,8 +43,9 @@ public class IfElse extends StatementNode {
                 '}';
     }
 
-    @Override
-    public Object accept(Visitor visitor, Object param) {
+    public <TP, TR> TR accept(Visitor<TP,TR> visitor, TP param) {
         return visitor.visit(this,param);
     }
+
+
 }

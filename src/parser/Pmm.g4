@@ -51,7 +51,8 @@ defParameters returns [List<VarDefinition> ast = new ArrayList<VarDefinition>()]
 
 
 varDefinitions returns [List<VarDefinition> ast = new ArrayList<VarDefinition>()] :
-   ids ':' type {for(Variable var: $ids.ast){$ast.add(new VarDefinition ($type.ast,var.getName(),var.getLine(),var.getColumn()));}}
+   ids ':' type {for(Variable var: $ids.ast){VarDefinition def= new VarDefinition ($type.ast,var.getName(),var.getLine(),var.getColumn());
+   if($ast.contains(def)){new ErrorType("Error de definición de variable duplicada: "+var.getName(),var.getLine(),var.getColumn());} $ast.add(def);}}
 ;
 
 
@@ -134,13 +135,13 @@ complexType returns [Type ast]:
 fields returns [List<RecordField> ast = new ArrayList<RecordField>()] :
 
     (ids ':' type ';' {for(Variable var: $ids.ast){RecordField campo= new RecordField ($type.ast,var.getName(),var.getLine(),var.getColumn());
-    $ast.add(campo);}})*
+    if($ast.contains(campo)){new ErrorType("Error de campo duplicado: "+var.getName(),var.getLine(),var.getColumn());} $ast.add(campo);}})*
 
  ;
 
 ids returns [List<Variable> ast = new ArrayList<Variable>()]:
     ID1=ID{$ast.add(new Variable($ID1.text,$ID1.getLine(),$ID1.getCharPositionInLine()+1)); }
-    (',' ID2=ID {$ast.add(new Variable($ID1.text,$ID2.getLine(),$ID2.getCharPositionInLine()+1));})*
+    (',' ID2=ID {$ast.add(new Variable($ID2.text,$ID2.getLine(),$ID2.getCharPositionInLine()+1));})*
 
 ;
 

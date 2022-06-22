@@ -10,6 +10,7 @@ public abstract class DefinitionNode implements Definition {
     String name;
     int scope;
 
+
     public DefinitionNode(Type type,String name,int line, int column){
         this.line=line;
         this.column=column;
@@ -17,12 +18,6 @@ public abstract class DefinitionNode implements Definition {
         this.name=name;
     }
 
-    public int getScope(){
-        return scope;
-    }
-    public void setScope(int scope) {
-        this.scope=scope;
-    }
 
     public int getLine() {
         return line;
@@ -40,5 +35,12 @@ public abstract class DefinitionNode implements Definition {
     @Override
     public String getName() {
         return name;
+    }
+
+    public int getScope(){
+        return scope;
+    }
+    public void setScope(int scope) {
+        this.scope=scope;
     }
 }

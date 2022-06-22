@@ -1,6 +1,7 @@
 package ast.types;
 
-import errorHandler.ErrorType;
+
+import ast.ASTNode;
 import semantic.Visitor;
 
 public class IntType extends TypeNode {
@@ -31,67 +32,62 @@ public class IntType extends TypeNode {
     }
 
     @Override
-    public Type arithmetic(Type right){
+    public Type arithmetic(Type right, ASTNode campo){
         if(right.equals(IntType.getInstance()) || right instanceof ErrorType)
             return right;
-        return null;
+        return super.arithmetic(right,campo);
 
     }
 
     @Override
-    public Type arithmetic(){
+    public Type arithmetic(ASTNode campo){
         return this;
     }
 
+
     @Override
-    public Type comparison(Type right){
+    public Type comparison(Type right,ASTNode campo){
         if(right.equals(IntType.getInstance()) )
             return IntType.getInstance();
-        return null;
+        return super.comparison(right,campo);
     }
 
     @Override
-    public Type logic(Type right){
-        if(right.equals(IntType.getInstance()) || right instanceof ErrorType )
-            return right;
-        return null;
-    }
-
-    @Override
-    public Type logic(){
-        return IntType.getInstance();
-
-    }
-
-    @Override
-    public Type promotesTo(Type left){
+    public Type promotesTo(Type left,ASTNode campo){
         if(left.equals(IntType.getInstance()) || left instanceof ErrorType  )
             return left;
 
-        return null;
+        return super.promotesTo(left,campo);
     }
 
     @Override
-    public Type canBeCastTo(Type right){
-        if(right.equals(IntType.getInstance()) || right.equals(DoubleType.getInstance()) || right.equals(CharType.getInstance()))
+    public Type logic(Type right,ASTNode campo){
+        if(right.equals(IntType.getInstance()) || right instanceof ErrorType )
             return right;
-        return null;
+        return super.logic(right,campo);
     }
 
+    @Override
+    public Type logic(ASTNode campo){
+        return IntType.getInstance();
 
+    }
+    @Override
+    public Type canBeCastTo(Type right,ASTNode campo){
+        if(right.equals(IntType.getInstance()) || right.equals(DoubleType.getInstance()) || right.equals(CharType.getInstance()))
+            return right;
+        return super.canBeCastTo(right,campo);
+    }
 
-    public int numberOfBytes(){
+    @Override
+    public int numberOfBytes()  {
         return 2;
     }
 
-    public boolean isLvalue(){
-        return true;
-    }
-
+    @Override
     public char getSuffix(){
         return 'i';
     }
-
 
 
     @Override
@@ -99,8 +95,9 @@ public class IntType extends TypeNode {
         return "IntType";
     }
 
-    @Override
-    public Object accept(Visitor visitor, Object param) {
+    public <TP, TR> TR accept(Visitor<TP,TR> visitor, TP param) {
         return visitor.visit(this,param);
     }
+
+
 }

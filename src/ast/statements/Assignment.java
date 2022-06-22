@@ -3,6 +3,7 @@ package ast.statements;
 import ast.expressions.Expression;
 import semantic.Visitor;
 
+
 public class Assignment extends StatementNode {
 
 
@@ -35,8 +36,9 @@ public class Assignment extends StatementNode {
                 '}';
     }
 
-    @Override
-    public Object accept(Visitor visitor, Object param) {
+    public <TP, TR> TR accept(Visitor<TP,TR> visitor, TP param) {
         return visitor.visit(this,param);
     }
+
+
 }

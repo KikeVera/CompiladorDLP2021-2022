@@ -1,4 +1,4 @@
-// Generated from C:/Users/Kike/IdeaProjects/DLPPracticas/src/parser\Pmm.g4 by ANTLR 4.9.1
+// Generated from C:/Users/UO246711/Desktop/DLPPracticas2022/src/parser\Pmm.g4 by ANTLR 4.9.2
 package parser;
 
 import ast.*;
@@ -9,7 +9,7 @@ import ast.expressions.unary.*;
 import ast.definitions.*;
 import ast.statements.*;
 import ast.types.*;
-import errorHandler.*;
+
 
 
 
@@ -95,6 +95,18 @@ public class PmmBaseListener implements PmmListener {
 	 * <p>The default implementation does nothing.</p>
 	 */
 	@Override public void exitFunctionType(PmmParser.FunctionTypeContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterDefParameters(PmmParser.DefParametersContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitDefParameters(PmmParser.DefParametersContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
@@ -215,6 +227,18 @@ public class PmmBaseListener implements PmmListener {
 	 * <p>The default implementation does nothing.</p>
 	 */
 	@Override public void exitFields(PmmParser.FieldsContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterIds(PmmParser.IdsContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitIds(PmmParser.IdsContext ctx) { }
 
 	/**
 	 * {@inheritDoc}

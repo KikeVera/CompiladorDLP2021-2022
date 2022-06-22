@@ -1,4 +1,4 @@
-// Generated from C:/Users/Kike/IdeaProjects/DLPPracticas/src/parser\Pmm.g4 by ANTLR 4.9.1
+// Generated from C:/Users/UO246711/Desktop/DLPPracticas2022/src/parser\Pmm.g4 by ANTLR 4.9.2
 package parser;
 
 import ast.*;
@@ -9,7 +9,7 @@ import ast.expressions.unary.*;
 import ast.definitions.*;
 import ast.statements.*;
 import ast.types.*;
-import errorHandler.*;
+
 
 
 import org.antlr.v4.runtime.tree.ParseTreeVisitor;
@@ -58,6 +58,12 @@ public interface PmmVisitor<T> extends ParseTreeVisitor<T> {
 	 * @return the visitor result
 	 */
 	T visitFunctionType(PmmParser.FunctionTypeContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link PmmParser#defParameters}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitDefParameters(PmmParser.DefParametersContext ctx);
 	/**
 	 * Visit a parse tree produced by {@link PmmParser#varDefinitions}.
 	 * @param ctx the parse tree
@@ -118,4 +124,10 @@ public interface PmmVisitor<T> extends ParseTreeVisitor<T> {
 	 * @return the visitor result
 	 */
 	T visitFields(PmmParser.FieldsContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link PmmParser#ids}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitIds(PmmParser.IdsContext ctx);
 }

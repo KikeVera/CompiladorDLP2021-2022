@@ -20,17 +20,20 @@ public class VoidType extends TypeNode {
         super(line, column);
     }
 
-    public int numberOfBytes(){
+    @Override
+    public int numberOfBytes()  {
         return 0;
     }
+
 
     @Override
     public String toString() {
         return "VoidType";
     }
 
-    @Override
-    public Object accept(Visitor visitor, Object param) {
+    public <TP, TR> TR accept(Visitor<TP,TR> visitor, TP param) {
         return visitor.visit(this,param);
     }
+
+
 }

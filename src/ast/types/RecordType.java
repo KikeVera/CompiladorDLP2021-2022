@@ -1,7 +1,9 @@
 package ast.types;
 
+import ast.ASTNode;
 import ast.RecordField;
 import semantic.Visitor;
+
 
 import java.util.List;
 
@@ -19,14 +21,14 @@ public class RecordType extends TypeNode {
     }
 
     @Override
-    public Type dot(String campo){
+    public Type dot(String campo, ASTNode node){
         for(RecordField field:fields){
             if(field.getName().equals(campo)){
                 return field.getType();
             }
         }
 
-        return null;
+        return super.dot(campo,node);
     }
 
     public int numberOfBytes(){
@@ -37,10 +39,6 @@ public class RecordType extends TypeNode {
         return cont;
     }
 
-    public boolean isLvalue(){
-        return true;
-    }
-
 
     @Override
     public String toString() {
@@ -49,8 +47,9 @@ public class RecordType extends TypeNode {
                 '}';
     }
 
-    @Override
-    public Object accept(Visitor visitor, Object param) {
+    public <TP, TR> TR accept(Visitor<TP,TR> visitor, TP param) {
         return visitor.visit(this,param);
     }
+
+
 }

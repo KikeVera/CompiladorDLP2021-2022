@@ -19,130 +19,126 @@ import ast.statements.*;
 import ast.types.*;
 
 
-public abstract class AbstractVisitor implements Visitor {
+public abstract class AbstractVisitor<TP,TR> implements Visitor<TP,TR> {
 
 
 
-    protected Object defaultMethod(){
-        return null;
-
-    }
 
     @Override
-    public Object visit(Program campo, Object param) {
+    public TR visit(Program campo, TP param) {
         for(Definition definition: campo.getDefinitions()){
             definition.accept(this,param);
         }
 
-        return defaultMethod();
+        return null;
     }
     @Override
-    public Object visit(FuncDefinition campo, Object param) {
+    public TR visit(FuncDefinition campo, TP param) {
 
         campo.getType().accept(this,null);
         for(Statement statement:campo.getStatements()){
             statement.accept(this,param);
         }
-        return defaultMethod();
+        return null;
     }
 
 
     @Override
-    public Object visit(VarDefinition campo, Object param) {
+    public TR visit(VarDefinition campo, TP param) {
         campo.getType().accept(this,param);
-        return defaultMethod();
+        return null;
     }
 
     @Override
-    public Object visit(CharLiteral campo, Object param) {
-        return defaultMethod();
+    public TR visit(CharLiteral campo, TP param) {
+        return null;
     }
 
     @Override
-    public Object visit(DoubleLiteral campo, Object param) {
-        return defaultMethod();
+    public TR visit(DoubleLiteral campo, TP param) {
+        return null;
     }
 
     @Override
-    public Object visit(IntLiteral campo, Object param) {
-        return defaultMethod();
+    public TR visit(IntLiteral campo, TP param) {
+        return null;
     }
 
     @Override
-    public Object visit(Arithmetic campo, Object param) {
+    public TR visit(Arithmetic campo, TP param) {
         campo.getExpressionIzq().accept(this,param);
         campo.getExpressionDer().accept(this,param);
-        return defaultMethod();
+        return null;
     }
 
     @Override
-    public Object visit(Comparison campo, Object param) {
+    public TR visit(Comparison campo, TP param) {
         campo.getExpressionIzq().accept(this,param);
         campo.getExpressionDer().accept(this,param);
 
-        return defaultMethod();
+        return null;
     }
 
     @Override
-    public Object visit(Logic campo, Object param) {
+    public TR visit(Logic campo, TP param) {
         campo.getExpressionIzq().accept(this,param);
         campo.getExpressionDer().accept(this,param);
-        return defaultMethod();
+        return null;
     }
 
     @Override
-    public Object visit(Negation campo, Object param) {
+    public TR visit(Negation campo, TP param) {
         campo.getExpression().accept(this,param);
 
-        return defaultMethod();
+        return null;
     }
 
     @Override
-    public Object visit(UnaryMinus campo, Object param) {
+    public TR visit(UnaryMinus campo, TP param) {
         campo.getExpression().accept(this,param);
-        return defaultMethod();
+        return null;
     }
 
     @Override
-    public Object visit(ArrayAccess campo, Object param) {
+    public TR visit(ArrayAccess campo, TP param) {
         campo.getArray().accept(this,param);
         campo.getAccess().accept(this,param);
-        return defaultMethod();
+        return null;
     }
 
     @Override
-    public Object visit(Cast campo, Object param) {
+    public TR visit(Cast campo, TP param) {
         campo.getExpression().accept(this,param);
-        return defaultMethod();
+        return null;
     }
 
     @Override
-    public Object visit(FieldAcess campo, Object param) {
+    public TR visit(FieldAccess campo, TP param) {
         campo.getLeft().accept(this,param);
-        return defaultMethod();
+        return null;
     }
 
     @Override
-    public Object visit(Variable campo, Object param) { return defaultMethod(); }
+    public TR visit(Variable campo, TP param) { return null; }
 
     @Override
-    public Object visit(FunctionInvocation campo, Object param) {
+    public TR visit(FunctionInvocation campo, TP param) {
         campo.getFunction().accept(this,param);
         for(Expression expression:campo.getParams())
             expression.accept(this,param);
-        return defaultMethod();
+        return null;
     }
 
     @Override
-    public Object visit(Assignment campo, Object param) {
+    public TR visit(Assignment campo, TP param) {
         campo.getExpressionIzq().accept(this,param);
         campo.getExpressionDer().accept(this,param);
 
-        return defaultMethod();
+        return null;
     }
 
     @Override
-    public Object visit(IfElse campo, Object param) {
+    public TR visit(IfElse campo, TP param) {
         campo.getCondition().accept(this,param);
 
         for(Statement statement: campo.getIfSt()){
@@ -152,85 +148,90 @@ public abstract class AbstractVisitor implements Visitor {
             statement.accept(this,param);
         }
 
-        return defaultMethod();
+        return null;
     }
 
     @Override
-    public Object visit(Input campo, Object param) {
+    public TR visit(Input campo, TP param) {
         for(Expression expression: campo.getExpressions()){
             expression.accept(this,param);
         }
 
-        return defaultMethod();
+        return null;
     }
 
     @Override
-    public Object visit(Print campo, Object param) {
+    public TR visit(Print campo, TP param) {
         for(Expression expression: campo.getExpressions()){
             expression.accept(this,param);
         }
 
-        return defaultMethod();
+        return null;
     }
 
     @Override
-    public Object visit(Return campo, Object param) {
+    public TR visit(Return campo, TP param) {
         campo.getExpression().accept(this,null);
-        return defaultMethod();
+        return null;
     }
 
     @Override
-    public Object visit(While campo, Object param) {
+    public TR visit(While campo, TP param) {
         campo.getCondition().accept(this,param);
         for(Statement statement: campo.getWhileST()){
             statement.accept(this,param);
         }
 
-        return defaultMethod();
+        return null;
     }
 
     @Override
-    public Object visit(ArrayType campo, Object param) {
+    public TR visit(ArrayType campo, TP param) {
         campo.getType().accept(this,null);
-        return defaultMethod();
+        return null;
     }
 
     @Override
-    public Object visit(CharType campo, Object param) { return defaultMethod(); }
+    public TR visit(CharType campo, TP param) { return null; }
 
     @Override
-    public Object visit(DoubleType campo, Object param) {
-        return defaultMethod();
+    public TR visit(DoubleType campo, TP param) {
+        return null;
     }
 
     @Override
-    public Object visit(FunctionType campo, Object param) {
+    public TR visit(FunctionType campo, TP param) {
         campo.getReturnType().accept(this,null);
         for(Definition definition:campo.getParams())
             definition.accept(this,null);
-        return defaultMethod();
+        return null;
     }
 
     @Override
-    public Object visit(IntType campo, Object param) {
-        return defaultMethod();
+    public TR visit(IntType campo, TP param) {
+        return null;
     }
 
     @Override
-    public Object visit(RecordType campo, Object param) {
+    public TR visit(RecordType campo, TP param) {
         for(RecordField field: campo.getFields())
             field.accept(this,null);
-        return defaultMethod();
+        return null;
     }
 
     @Override
-    public Object visit(VoidType campo, Object param) {
-        return defaultMethod();
+    public TR visit(VoidType campo, TP param) {
+        return null;
     }
 
     @Override
-    public Object visit(RecordField campo, Object param) {
+    public TR visit(ErrorType campo, TP param) {
+        return null;
+    }
+
+    @Override
+    public TR visit(RecordField campo, TP param) {
         campo.getType().accept(this,null);
-        return defaultMethod();
+        return null;
     }
 }

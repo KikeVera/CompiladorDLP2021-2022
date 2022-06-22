@@ -6,6 +6,7 @@ import ast.expressions.Variable;
 import ast.types.Type;
 import semantic.Visitor;
 
+
 import java.util.List;
 
 public class FunctionInvocation implements Expression, Statement {
@@ -43,6 +44,22 @@ public class FunctionInvocation implements Expression, Statement {
         return params;
     }
 
+    public boolean getLValue() {
+        return lValue;
+    }
+
+    public void setLValue(boolean lValue) {
+        this.lValue = lValue;
+    }
+
+    public Type getType() {
+        return type;
+    }
+
+    public void setType(Type type) {
+        this.type = type;
+    }
+
     @Override
     public String toString() {
         return "FunctionInvocation{" +
@@ -53,28 +70,11 @@ public class FunctionInvocation implements Expression, Statement {
                 '}';
     }
 
-    @Override
-    public Object accept(Visitor visitor, Object param) {
+    public <TP, TR> TR accept(Visitor<TP,TR> visitor, TP param) {
         return visitor.visit(this,param);
     }
 
-    @Override
-    public boolean getLValue() {
-        return lValue;
-    }
 
-    @Override
-    public void setLValue(boolean lValue) {
-        this.lValue=lValue;
-    }
 
-    @Override
-    public Type getType() {
-        return type;
-    }
 
-    @Override
-    public void setType(Type type) {
-        this.type=type;
-    }
 }

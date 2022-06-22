@@ -4,10 +4,12 @@ import ast.statements.Statement;
 import ast.types.Type;
 import semantic.Visitor;
 
+
 import java.util.List;
 
 public class FuncDefinition extends DefinitionNode{
 
+    public int offSetLocal;
     List<Statement> statements;
 
 
@@ -30,10 +32,10 @@ public class FuncDefinition extends DefinitionNode{
                 '}';
     }
 
-    @Override
-    public Object accept(Visitor visitor, Object param) {
-       return visitor.visit(this,param);
 
+
+    public <TP, TR> TR accept(Visitor <TP,TR> visitor, TP param) {
+        return visitor.visit(this,param);
     }
 }
 

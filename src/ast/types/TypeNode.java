@@ -1,7 +1,8 @@
 package ast.types;
 
+
+import ast.ASTNode;
 import ast.expressions.Expression;
-import errorHandler.ErrorType;
 
 import java.util.List;
 
@@ -28,73 +29,76 @@ public abstract class TypeNode implements Type {
         return false;
     }
 
-    @Override
-   public boolean isBuiltInType(){return false;}
 
-    @Override
-    public Type arithmetic(Type right){
+    public boolean isBuiltInType(){return false;}
+
+
+    public Type arithmetic(Type right, ASTNode campo){
         if(right instanceof ErrorType)
             return right;
-        return null;
-    }
-    @Override
-    public Type arithmetic(){
-
-        return null;
+        return  new ErrorType("Imposible realizar la operación entre un: "+this+
+                " y un "+right,campo.getLine(),campo.getColumn());
     }
 
-    @Override
-    public Type comparison(Type right){
-        return null;
+    public Type arithmetic(ASTNode campo){
+
+        return  new ErrorType("Imposible realizar la operación con un: "
+                +this,campo.getLine(),campo.getColumn());
     }
 
-    @Override
-    public Type logic(Type right){
-        return null;
+
+    public Type comparison(Type right,ASTNode campo){
+        return new ErrorType("Imposible realizar la comparación entre un: "+this+
+                " y un "+right,campo.getLine(),campo.getColumn());
     }
 
-    @Override
-    public Type logic(){
-        return null;
+
+    public Type logic(Type right,ASTNode campo){
+        return new ErrorType("Imposible realizar la operacion logica entre un: "+this+
+                " y un "+right,campo.getLine(),campo.getColumn());
+    }
+
+
+    public Type logic(ASTNode campo){
+        return  new ErrorType("Imposible realizar la operación lógica con un: "
+                +this,campo.getLine(),campo.getColumn());
 
     }
 
-    @Override
-    public Type promotesTo(Type left){
-        return null;
+
+    public Type promotesTo(Type left,ASTNode campo){
+        return new ErrorType("Imposible realizar la promoción a un "+left+
+                " de un "+this,campo.getLine(),campo.getColumn());
     }
 
-    @Override
-    public Type canBeCastTo(Type right){
-        return null;
+
+    public Type canBeCastTo(Type right,ASTNode campo){
+        return new ErrorType("Imposible realizar un cast: "+right+
+                " en un "+this,campo.getLine(),campo.getColumn());
     }
 
-    @Override
-    public Type squareBrackets(Type array){
-        return null;
+
+    public Type squareBrackets(Type array,ASTNode campo){
+        return new ErrorType("Imposible realizar el acceso al array",campo.getLine(),campo.getColumn());
     }
 
-    @Override
-    public Type dot(String campo){
-        return null;
+
+    public Type dot(String campo,ASTNode node){
+        return new ErrorType("Imposible acceder al campo del struct: "+campo,node.getLine(),node.getColumn());
     }
 
-    @Override
-    public Type parenthesis(List<Expression> list){
-        return null;
+
+    public Type parenthesis(List<Expression> list, ASTNode campo){
+        return new ErrorType("Invocación a la función no válida: ",campo.getLine(),campo.getColumn());
     }
 
-    @Override
+
     public int numberOfBytes()  {
-        return 0;
+        throw new IllegalStateException("No se pueden obtener los bytes de este tipo: "+this);
     }
 
-   public char getSuffix(){
-     throw new RuntimeException("Accediendo a un tipo no BuiltIn para obtener su sufijo");
-    }
-
-    public boolean isLvalue(){
-        return false;
+    public char getSuffix(){
+        throw new IllegalStateException("No se pueden obtener el sufijo de este tipo: "+this);
     }
 
 

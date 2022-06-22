@@ -3,12 +3,12 @@ package codeGenerator;
 import ast.RecordField;
 import ast.definitions.VarDefinition;
 import ast.expressions.ArrayAccess;
-import ast.expressions.FieldAcess;
+import ast.expressions.FieldAccess;
 import ast.expressions.Variable;
 import ast.types.IntType;
 import ast.types.RecordType;
 
-public class AddressCGVisitor extends AbstractCGVisitor {
+public class AddressCGVisitor extends AbstractCGVisitor<Void,Void> {
 
     private CodeGenerator codeGenerator;
     private ValueCGVisitor valueCGVisitor;
@@ -36,7 +36,7 @@ public class AddressCGVisitor extends AbstractCGVisitor {
     */
 
     @Override
-    public Object visit(Variable campo, Object param) {
+    public Void visit(Variable campo, Void param) {
         if(campo.getDefinition().getScope()==0)
            codeGenerator.pusha(((VarDefinition)campo.getDefinition()).getOffset());
 
@@ -62,7 +62,7 @@ public class AddressCGVisitor extends AbstractCGVisitor {
     */
 
     @Override
-    public Object visit(ArrayAccess campo, Object param) {
+    public Void visit(ArrayAccess campo, Void param) {
         campo.getArray().accept(this,param);
         campo.getAccess().accept(this.valueCGVisitor,param);
         codeGenerator.push(campo.getType().numberOfBytes());
@@ -85,7 +85,7 @@ public class AddressCGVisitor extends AbstractCGVisitor {
     */
 
     @Override
-    public Object visit(FieldAcess campo, Object param) {
+    public Void visit(FieldAccess campo, Void param) {
         campo.getLeft().accept(this,param);
 
         for(RecordField field:((RecordType)campo.getLeft().getType()).getFields()){

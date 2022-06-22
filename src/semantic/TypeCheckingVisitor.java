@@ -2,10 +2,9 @@ package semantic;
 
 
 import ast.FunctionInvocation;
-import ast.RecordField;
+
 import ast.definitions.Definition;
 import ast.definitions.FuncDefinition;
-import ast.definitions.VarDefinition;
 import ast.expressions.*;
 import ast.expressions.literals.CharLiteral;
 import ast.expressions.literals.DoubleLiteral;
@@ -16,27 +15,27 @@ import ast.expressions.operators.Logic;
 import ast.expressions.unary.Negation;
 import ast.expressions.unary.UnaryMinus;
 import ast.statements.*;
-
 import ast.types.*;
 
-import errorHandler.ErrorType;
 
-public class TypeCheckingVisitor extends AbstractVisitor {
+public class TypeCheckingVisitor extends AbstractVisitor<FunctionType,Void> {
 
-    @Override
-    public Object visit(FuncDefinition campo, Object param) {
 
-        campo.getType().accept(this,null);
+
+
+     @Override
+    public Void visit(FuncDefinition campo, FunctionType param) {
+
+        campo.getType().accept(this,param);
         for(Statement statement:campo.getStatements()){
-            statement.accept(this,campo.getType());
+            statement.accept(this,(FunctionType) campo.getType());
         }
-        return defaultMethod();
+        return null;
     }
 
 
-
     @Override
-    public Object visit(CharLiteral campo, Object param) {
+    public Void visit(CharLiteral campo, FunctionType param) {
 
         campo.setLValue(false);
         campo.setType(CharType.getInstance());
@@ -44,82 +43,59 @@ public class TypeCheckingVisitor extends AbstractVisitor {
     }
 
     @Override
-    public Object visit(DoubleLiteral campo, Object param) {
+    public Void visit(DoubleLiteral campo, FunctionType param) {
         campo.setLValue(false);
         campo.setType(DoubleType.getInstance());
         return null;
     }
 
     @Override
-    public Object visit(IntLiteral campo, Object param) {
+    public Void visit(IntLiteral campo, FunctionType param) {
         campo.setLValue(false);
         campo.setType(IntType.getInstance());
         return null;
     }
 
     @Override
-    public Object visit(Arithmetic campo, Object param) {
-        campo.getExpressionIzq().accept(this,null);
-        campo.getExpressionDer().accept(this,null);
-
-        campo.setType(campo.getExpressionIzq().getType().arithmetic(campo.getExpressionDer().getType()));
-        if(campo.getType()==null){
-            campo.setType(new ErrorType("Imposible realizar la operación entre un: "+campo.getExpressionIzq().getType()+
-                    " y un "+campo.getExpressionDer().getType(),campo.getLine(),campo.getColumn()));
-        }
-
+    public Void visit(Arithmetic campo, FunctionType param) {
+        campo.getExpressionIzq().accept(this,param);
+        campo.getExpressionDer().accept(this,param);
+        campo.setType(campo.getExpressionIzq().getType().arithmetic(campo.getExpressionDer().getType(),campo));
         campo.setLValue(false);
-
 
         return null;
     }
 
     @Override
-    public Object visit(Comparison campo, Object param) {
-        campo.getExpressionIzq().accept(this,null);
-        campo.getExpressionDer().accept(this,null);
-        campo.setType(campo.getExpressionIzq().getType().comparison(campo.getExpressionDer().getType()));
-        if(campo.getType()==null){
-            campo.setType(new ErrorType("Imposible realizar la comparación entre un: "+campo.getExpressionIzq().getType()+
-                    " y un "+campo.getExpressionDer().getType(),campo.getLine(),campo.getColumn()));
-        }
+    public Void visit(Comparison campo, FunctionType param) {
+        campo.getExpressionIzq().accept(this,param);
+        campo.getExpressionDer().accept(this,param);
+        campo.setType(campo.getExpressionIzq().getType().comparison(campo.getExpressionDer().getType(),campo));
         campo.setLValue(false);
         return null;
     }
 
     @Override
-    public Object visit(Logic campo, Object param) {
-        campo.getExpressionIzq().accept(this,null);
-        campo.getExpressionDer().accept(this,null);
-        campo.setType(campo.getExpressionIzq().getType().logic(campo.getExpressionDer().getType()));
-        if(campo.getType()==null){
-            campo.setType(new ErrorType("Imposible realizar la operacion logica entre un: "+campo.getExpressionIzq().getType()+
-                    " y un "+campo.getExpressionDer().getType(),campo.getLine(),campo.getColumn()));
-        }
+    public Void visit(Logic campo, FunctionType param) {
+        campo.getExpressionIzq().accept(this,param);
+        campo.getExpressionDer().accept(this,param);
+        campo.setType(campo.getExpressionIzq().getType().logic(campo.getExpressionDer().getType(),campo));
         campo.setLValue(false);
         return null;
     }
 
     @Override
-    public Object visit(Negation campo, Object param) {
-        campo.getExpression().accept(this,null);
-        campo.setType(campo.getExpression().getType().logic());
-        if(campo.getType()==null){
-            campo.setType(new ErrorType("Imposible realizar la operacion logica con un: "+campo.getExpression().getType()
-                    ,campo.getLine(),campo.getColumn()));
-        }
+    public Void visit(Negation campo, FunctionType param) {
+        campo.getExpression().accept(this,param);
+        campo.setType(campo.getExpression().getType().logic(campo));
         campo.setLValue(false);
         return null;
     }
 
     @Override
-    public Object visit(UnaryMinus campo, Object param) {
-        campo.getExpression().accept(this,null);
-        campo.setType(campo.getExpression().getType().arithmetic());
-        if(campo.getType()==null){
-            campo.setType(new ErrorType("Imposible realizar la operación con un: "
-                    +campo.getExpression().getType(),campo.getLine(),campo.getColumn()));
-        }
+    public Void visit(UnaryMinus campo, FunctionType param) {
+        campo.getExpression().accept(this,param);
+        campo.setType(campo.getExpression().getType().arithmetic(campo));
         campo.setLValue(false);
         return null;
     }
@@ -127,17 +103,12 @@ public class TypeCheckingVisitor extends AbstractVisitor {
 
 
     @Override
-    public Object visit(ArrayAccess campo, Object param) {
+    public Void visit(ArrayAccess campo, FunctionType param) {
         campo.getArray().accept(this,param);
         campo.getAccess().accept(this,param);
         campo.setLValue(true);
 
-        campo.setType(campo.getArray().getType().squareBrackets(campo.getAccess().getType()));
-        if(campo.getType()==null){
-            campo.setType(new ErrorType("Imposible realizar el acceso al array",campo.getLine(),campo.getColumn()));
-        }
-
-
+        campo.setType(campo.getArray().getType().squareBrackets(campo.getAccess().getType(),campo));
         if(!campo.getArray().getLValue()){
             new ErrorType("El array al que se intenta acceder no es válido", campo.getArray().getLine(),
                     campo.getArray().getColumn());
@@ -148,26 +119,19 @@ public class TypeCheckingVisitor extends AbstractVisitor {
     }
 
     @Override
-    public Object visit(Cast campo, Object param) {
-        campo.getExpression().accept(this,null);
+    public Void visit(Cast campo, FunctionType param) {
+        campo.getExpression().accept(this,param);
 
-        campo.setType(campo.getExpression().getType().canBeCastTo(campo.getCastType()));
-        if(campo.getType()==null){
-            campo.setType(new ErrorType("Imposible realizar un cast: "+campo.getCastType()+
-                    " en un "+campo.getExpression().getType(),campo.getLine(),campo.getColumn()));
-        }
+        campo.setType(campo.getExpression().getType().canBeCastTo(campo.getCastType(),campo));
         campo.setLValue(false);
         return null;
     }
 
     @Override
-    public Object visit(FieldAcess campo, Object param) {
+    public Void visit(FieldAccess campo, FunctionType param) {
         campo.getLeft().accept(this,param);
 
-        campo.setType(campo.getLeft().getType().dot(campo.getField()));
-        if(campo.getType()==null){
-            campo.setType(new ErrorType("Imposible acceder al campo del struct: "+campo.getField(),campo.getLine(),campo.getColumn()));
-        }
+        campo.setType(campo.getLeft().getType().dot(campo.getField(),campo));
         campo.setLValue(true);
         if(!campo.getLeft().getLValue()){
             new ErrorType("La expresión mediante la cual se intenta acceder al campo no es válida", campo.getLeft().getLine(),
@@ -178,28 +142,19 @@ public class TypeCheckingVisitor extends AbstractVisitor {
     }
 
     @Override
-    public Object visit(Variable campo, Object param) {
-
-
+    public Void visit(Variable campo, FunctionType param) {
         campo.setType(campo.getDefinition().getType());
-
-        if(campo.getType().isLvalue())
-            campo.setLValue(true);
-        else
-            campo.setLValue(false);
+        campo.setLValue(true);
         return null;
     }
 
     @Override
-    public Object visit(FunctionInvocation campo, Object param) {
-        campo.getFunction().accept(this,null);
+    public Void visit(FunctionInvocation campo, FunctionType param) {
+        campo.getFunction().accept(this,param);
         for(Expression exp :campo.getParams()){
-            exp.accept(this,null);
+            exp.accept(this,param);
         }
-        campo.setType(campo.getFunction().getType().parenthesis(campo.getParams()));
-        if(campo.getType()==null){
-            campo.setType(new ErrorType("Invocación a la función no válida: ",campo.getLine(),campo.getColumn()));
-        }
+        campo.setType(campo.getFunction().getType().parenthesis(campo.getParams(),campo));
         campo.setLValue(false);
         return null;
 
@@ -208,15 +163,14 @@ public class TypeCheckingVisitor extends AbstractVisitor {
 
 
     @Override
-    public Object visit(Assignment campo, Object param) {
+    public Void visit(Assignment campo, FunctionType param) {
         campo.getExpressionIzq().accept(this,param);
         campo.getExpressionDer().accept(this,param);
+
         Type typeDer=campo.getExpressionDer().getType();
-        campo.getExpressionDer().setType(typeDer.promotesTo(campo.getExpressionIzq().getType()));
-        if(campo.getExpressionDer().getType()==null){
-            campo.getExpressionDer().setType(new ErrorType("Imposible realizar la asignación a un "+campo.getExpressionIzq().getType()+
-                    " de un "+typeDer,campo.getLine(),campo.getColumn()));
-        }
+        if(!(typeDer instanceof ErrorType))
+             campo.getExpressionDer().setType(typeDer.promotesTo(campo.getExpressionIzq().getType(),campo));
+
 
         if (!campo.getExpressionIzq().getLValue())
             new ErrorType("La expresión a la izquierda de la asignación no es válida", campo.getExpressionIzq().getLine(),
@@ -228,7 +182,7 @@ public class TypeCheckingVisitor extends AbstractVisitor {
 
 
     @Override
-    public Object visit(Input campo, Object param) {
+    public Void visit(Input campo, FunctionType param) {
         for(Expression expression: campo.getExpressions()){
             expression.accept(this,param);
             if(!expression.getLValue()){
@@ -241,9 +195,8 @@ public class TypeCheckingVisitor extends AbstractVisitor {
     }
 
 
-
     @Override
-    public Object visit(While campo, Object param) {
+    public Void visit(While campo, FunctionType param) {
         campo.getCondition().accept(this,param);
         if(!campo.getCondition().getType().isLogical()){
             campo.getCondition().setType(new ErrorType("La condición del while no es válida",
@@ -253,11 +206,12 @@ public class TypeCheckingVisitor extends AbstractVisitor {
             statement.accept(this,param);
         }
 
-        return defaultMethod();
+        return null;
     }
 
+
     @Override
-    public Object visit(IfElse campo, Object param) {
+    public Void visit(IfElse campo, FunctionType param) {
         campo.getCondition().accept(this,param);
 
         if(!campo.getCondition().getType().isLogical()){
@@ -272,41 +226,30 @@ public class TypeCheckingVisitor extends AbstractVisitor {
             statement.accept(this,param);
         }
 
-        return defaultMethod();
+        return null;
     }
 
     @Override
-    public Object visit(Return campo, Object param) {
-        campo.getExpression().accept(this,null);
-        if(campo.getExpression().getType().promotesTo(((FunctionType)param).getReturnType())==null){
-            campo.getExpression().setType(new ErrorType("No se puede retornar un tipo "+campo.getExpression().getType() +" como un "+
-                    ((FunctionType)param).getReturnType(), campo.getExpression().getLine(),campo.getExpression().getColumn()));
+    public Void visit(Return campo, FunctionType param) {
+        campo.getExpression().accept(this,param);
+        campo.getExpression().setType(campo.getExpression().getType().promotesTo(param.getReturnType(),campo));
 
-        }
-        return defaultMethod();
+        return null;
     }
 
-
-
-
-
     @Override
-    public Object visit(FunctionType campo, Object param) {
-        campo.getReturnType().accept(this,null);
+    public Void visit(FunctionType campo, FunctionType param) {
+        campo.getReturnType().accept(this,param);
         for(Definition definition:campo.getParams()) {
-            definition.accept(this, null);
+            definition.accept(this, param);
             if(!definition.getType().isBuiltInType()){
                 new ErrorType("La definicion de la variable no es un tipo BuiltIN",
                         definition.getLine(),definition.getColumn());
 
             }
         }
-        return defaultMethod();
+        return null;
     }
-
-
-
-
 
 
 

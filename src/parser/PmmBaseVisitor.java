@@ -1,4 +1,4 @@
-// Generated from C:/Users/Kike/IdeaProjects/DLPPracticas/src/parser\Pmm.g4 by ANTLR 4.9.1
+// Generated from C:/Users/UO246711/Desktop/DLPPracticas2022/src/parser\Pmm.g4 by ANTLR 4.9.2
 package parser;
 
 import ast.*;
@@ -9,7 +9,7 @@ import ast.expressions.unary.*;
 import ast.definitions.*;
 import ast.statements.*;
 import ast.types.*;
-import errorHandler.*;
+
 
 
 import org.antlr.v4.runtime.tree.AbstractParseTreeVisitor;
@@ -65,6 +65,13 @@ public class PmmBaseVisitor<T> extends AbstractParseTreeVisitor<T> implements Pm
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
 	@Override public T visitFunctionType(PmmParser.FunctionTypeContext ctx) { return visitChildren(ctx); }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation returns the result of calling
+	 * {@link #visitChildren} on {@code ctx}.</p>
+	 */
+	@Override public T visitDefParameters(PmmParser.DefParametersContext ctx) { return visitChildren(ctx); }
 	/**
 	 * {@inheritDoc}
 	 *
@@ -135,4 +142,11 @@ public class PmmBaseVisitor<T> extends AbstractParseTreeVisitor<T> implements Pm
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
 	@Override public T visitFields(PmmParser.FieldsContext ctx) { return visitChildren(ctx); }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation returns the result of calling
+	 * {@link #visitChildren} on {@code ctx}.</p>
+	 */
+	@Override public T visitIds(PmmParser.IdsContext ctx) { return visitChildren(ctx); }
 }

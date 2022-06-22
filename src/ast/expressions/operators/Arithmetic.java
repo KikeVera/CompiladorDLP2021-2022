@@ -5,11 +5,8 @@ import semantic.Visitor;
 
 public class Arithmetic extends OperatorExpression {
 
-
-
-    public Arithmetic(Expression expressionIzq, Expression expressionDer, String operator,int line,int column){
-        super(expressionIzq, expressionDer, operator, line, column);
-
+    public Arithmetic(Expression expIzq, Expression expDer, String operator, int line, int column){
+        super(expIzq,expDer,operator,line,column);
     }
 
     @Override
@@ -21,8 +18,7 @@ public class Arithmetic extends OperatorExpression {
                 '}';
     }
 
-    @Override
-    public Object accept(Visitor visitor, Object param) {
+    public <TP, TR> TR accept(Visitor<TP,TR> visitor, TP param) {
         return visitor.visit(this,param);
     }
 }
