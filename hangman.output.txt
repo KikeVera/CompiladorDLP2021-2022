@@ -1,0 +1,1558 @@
+
+#source	"hangman.txt"
+
+	'* ArrayType{type=ArrayType{type=CharType, dimension=5}, dimension=50} words (offset 0)
+	'* IntType rng (offset 250)
+	'* ArrayType{type=CharType, dimension=30} tries (offset 252)
+	'* IntType n_tries (offset 282)
+
+
+	'Invocation to the main function
+call main
+halt
+
+
+
+
+#line	9
+	'* Function Definition
+ loadWord:
+	'* Parameters
+	'* IntType i (offset 9)
+	'* CharType c0 (offset 8)
+	'* CharType c1 (offset 7)
+	'* CharType c2 (offset 6)
+	'* CharType c3 (offset 5)
+	'* CharType c4 (offset 4)
+	'* LocalVariables
+	enter	0
+
+#line	10
+	'* Assignment
+	pusha	0
+	pusha	bp
+	pushi	9
+	addi
+	loadi
+	pushi	5
+	muli
+	addi
+	pushi	0
+	pushi	1
+	muli
+	addi
+	pusha	bp
+	pushi	8
+	addi
+	loadb
+	storeb
+
+#line	11
+	'* Assignment
+	pusha	0
+	pusha	bp
+	pushi	9
+	addi
+	loadi
+	pushi	5
+	muli
+	addi
+	pushi	1
+	pushi	1
+	muli
+	addi
+	pusha	bp
+	pushi	7
+	addi
+	loadb
+	storeb
+
+#line	12
+	'* Assignment
+	pusha	0
+	pusha	bp
+	pushi	9
+	addi
+	loadi
+	pushi	5
+	muli
+	addi
+	pushi	2
+	pushi	1
+	muli
+	addi
+	pusha	bp
+	pushi	6
+	addi
+	loadb
+	storeb
+
+#line	13
+	'* Assignment
+	pusha	0
+	pusha	bp
+	pushi	9
+	addi
+	loadi
+	pushi	5
+	muli
+	addi
+	pushi	3
+	pushi	1
+	muli
+	addi
+	pusha	bp
+	pushi	5
+	addi
+	loadb
+	storeb
+
+#line	14
+	'* Assignment
+	pusha	0
+	pusha	bp
+	pushi	9
+	addi
+	loadi
+	pushi	5
+	muli
+	addi
+	pushi	4
+	pushi	1
+	muli
+	addi
+	pusha	bp
+	pushi	4
+	addi
+	loadb
+	storeb
+	ret	0, 0, 7
+
+#line	17
+	'* Function Definition
+ loadWords:
+	'* Parameters
+	'* LocalVariables
+	enter	0
+
+#line	18
+	'* Function Invocation
+	pushi	0
+	pushb	97
+	pushb	98
+	pushb	117
+	pushb	115
+	pushb	101
+	call	loadWord
+
+#line	19
+	'* Function Invocation
+	pushi	1
+	pushb	97
+	pushb	100
+	pushb	117
+	pushb	108
+	pushb	116
+	call	loadWord
+
+#line	20
+	'* Function Invocation
+	pushi	2
+	pushb	97
+	pushb	103
+	pushb	101
+	pushb	110
+	pushb	116
+	call	loadWord
+
+#line	21
+	'* Function Invocation
+	pushi	3
+	pushb	97
+	pushb	110
+	pushb	103
+	pushb	101
+	pushb	114
+	call	loadWord
+
+#line	22
+	'* Function Invocation
+	pushi	4
+	pushb	97
+	pushb	112
+	pushb	112
+	pushb	108
+	pushb	101
+	call	loadWord
+
+#line	23
+	'* Function Invocation
+	pushi	5
+	pushb	97
+	pushb	119
+	pushb	97
+	pushb	114
+	pushb	100
+	call	loadWord
+
+#line	24
+	'* Function Invocation
+	pushi	6
+	pushb	98
+	pushb	97
+	pushb	115
+	pushb	105
+	pushb	115
+	call	loadWord
+
+#line	25
+	'* Function Invocation
+	pushi	7
+	pushb	98
+	pushb	101
+	pushb	97
+	pushb	99
+	pushb	104
+	call	loadWord
+
+#line	26
+	'* Function Invocation
+	pushi	8
+	pushb	98
+	pushb	105
+	pushb	114
+	pushb	116
+	pushb	104
+	call	loadWord
+
+#line	27
+	'* Function Invocation
+	pushi	9
+	pushb	98
+	pushb	108
+	pushb	111
+	pushb	99
+	pushb	107
+	call	loadWord
+
+#line	28
+	'* Function Invocation
+	pushi	10
+	pushb	98
+	pushb	108
+	pushb	111
+	pushb	111
+	pushb	100
+	call	loadWord
+
+#line	29
+	'* Function Invocation
+	pushi	11
+	pushb	98
+	pushb	111
+	pushb	97
+	pushb	114
+	pushb	100
+	call	loadWord
+
+#line	30
+	'* Function Invocation
+	pushi	12
+	pushb	98
+	pushb	114
+	pushb	97
+	pushb	105
+	pushb	110
+	call	loadWord
+
+#line	31
+	'* Function Invocation
+	pushi	13
+	pushb	98
+	pushb	114
+	pushb	101
+	pushb	97
+	pushb	100
+	call	loadWord
+
+#line	32
+	'* Function Invocation
+	pushi	14
+	pushb	98
+	pushb	114
+	pushb	101
+	pushb	97
+	pushb	107
+	call	loadWord
+
+#line	33
+	'* Function Invocation
+	pushi	15
+	pushb	98
+	pushb	114
+	pushb	111
+	pushb	119
+	pushb	110
+	call	loadWord
+
+#line	34
+	'* Function Invocation
+	pushi	16
+	pushb	98
+	pushb	117
+	pushb	121
+	pushb	101
+	pushb	114
+	call	loadWord
+
+#line	35
+	'* Function Invocation
+	pushi	17
+	pushb	99
+	pushb	97
+	pushb	117
+	pushb	115
+	pushb	101
+	call	loadWord
+
+#line	36
+	'* Function Invocation
+	pushi	18
+	pushb	99
+	pushb	104
+	pushb	97
+	pushb	105
+	pushb	110
+	call	loadWord
+
+#line	37
+	'* Function Invocation
+	pushi	19
+	pushb	99
+	pushb	104
+	pushb	97
+	pushb	105
+	pushb	114
+	call	loadWord
+
+#line	38
+	'* Function Invocation
+	pushi	20
+	pushb	99
+	pushb	104
+	pushb	101
+	pushb	115
+	pushb	116
+	call	loadWord
+
+#line	39
+	'* Function Invocation
+	pushi	21
+	pushb	99
+	pushb	104
+	pushb	105
+	pushb	101
+	pushb	102
+	call	loadWord
+
+#line	40
+	'* Function Invocation
+	pushi	22
+	pushb	99
+	pushb	104
+	pushb	105
+	pushb	108
+	pushb	100
+	call	loadWord
+
+#line	41
+	'* Function Invocation
+	pushi	23
+	pushb	99
+	pushb	104
+	pushb	105
+	pushb	110
+	pushb	97
+	call	loadWord
+
+#line	42
+	'* Function Invocation
+	pushi	24
+	pushb	99
+	pushb	108
+	pushb	97
+	pushb	105
+	pushb	109
+	call	loadWord
+
+#line	43
+	'* Function Invocation
+	pushi	25
+	pushb	99
+	pushb	108
+	pushb	97
+	pushb	115
+	pushb	115
+	call	loadWord
+
+#line	44
+	'* Function Invocation
+	pushi	26
+	pushb	99
+	pushb	108
+	pushb	111
+	pushb	99
+	pushb	107
+	call	loadWord
+
+#line	45
+	'* Function Invocation
+	pushi	27
+	pushb	99
+	pushb	111
+	pushb	97
+	pushb	99
+	pushb	104
+	call	loadWord
+
+#line	46
+	'* Function Invocation
+	pushi	28
+	pushb	99
+	pushb	111
+	pushb	97
+	pushb	115
+	pushb	116
+	call	loadWord
+
+#line	47
+	'* Function Invocation
+	pushi	29
+	pushb	99
+	pushb	111
+	pushb	117
+	pushb	114
+	pushb	116
+	call	loadWord
+
+#line	48
+	'* Function Invocation
+	pushi	30
+	pushb	99
+	pushb	111
+	pushb	118
+	pushb	101
+	pushb	114
+	call	loadWord
+
+#line	49
+	'* Function Invocation
+	pushi	31
+	pushb	99
+	pushb	114
+	pushb	101
+	pushb	97
+	pushb	109
+	call	loadWord
+
+#line	50
+	'* Function Invocation
+	pushi	32
+	pushb	99
+	pushb	114
+	pushb	105
+	pushb	109
+	pushb	101
+	call	loadWord
+
+#line	51
+	'* Function Invocation
+	pushi	33
+	pushb	99
+	pushb	114
+	pushb	111
+	pushb	115
+	pushb	115
+	call	loadWord
+
+#line	52
+	'* Function Invocation
+	pushi	34
+	pushb	99
+	pushb	114
+	pushb	111
+	pushb	119
+	pushb	100
+	call	loadWord
+
+#line	53
+	'* Function Invocation
+	pushi	35
+	pushb	99
+	pushb	114
+	pushb	111
+	pushb	119
+	pushb	110
+	call	loadWord
+
+#line	54
+	'* Function Invocation
+	pushi	36
+	pushb	99
+	pushb	121
+	pushb	99
+	pushb	108
+	pushb	101
+	call	loadWord
+
+#line	55
+	'* Function Invocation
+	pushi	37
+	pushb	100
+	pushb	97
+	pushb	110
+	pushb	99
+	pushb	101
+	call	loadWord
+
+#line	56
+	'* Function Invocation
+	pushi	38
+	pushb	100
+	pushb	101
+	pushb	97
+	pushb	116
+	pushb	104
+	call	loadWord
+
+#line	57
+	'* Function Invocation
+	pushi	39
+	pushb	100
+	pushb	101
+	pushb	112
+	pushb	116
+	pushb	104
+	call	loadWord
+
+#line	58
+	'* Function Invocation
+	pushi	40
+	pushb	100
+	pushb	111
+	pushb	117
+	pushb	98
+	pushb	116
+	call	loadWord
+
+#line	59
+	'* Function Invocation
+	pushi	41
+	pushb	100
+	pushb	114
+	pushb	97
+	pushb	102
+	pushb	116
+	call	loadWord
+
+#line	60
+	'* Function Invocation
+	pushi	42
+	pushb	100
+	pushb	114
+	pushb	97
+	pushb	109
+	pushb	97
+	call	loadWord
+
+#line	61
+	'* Function Invocation
+	pushi	43
+	pushb	100
+	pushb	114
+	pushb	101
+	pushb	97
+	pushb	109
+	call	loadWord
+
+#line	62
+	'* Function Invocation
+	pushi	44
+	pushb	100
+	pushb	114
+	pushb	101
+	pushb	115
+	pushb	115
+	call	loadWord
+
+#line	63
+	'* Function Invocation
+	pushi	45
+	pushb	100
+	pushb	114
+	pushb	105
+	pushb	110
+	pushb	107
+	call	loadWord
+
+#line	64
+	'* Function Invocation
+	pushi	46
+	pushb	100
+	pushb	114
+	pushb	105
+	pushb	118
+	pushb	101
+	call	loadWord
+
+#line	65
+	'* Function Invocation
+	pushi	47
+	pushb	101
+	pushb	97
+	pushb	114
+	pushb	116
+	pushb	104
+	call	loadWord
+
+#line	66
+	'* Function Invocation
+	pushi	48
+	pushb	101
+	pushb	110
+	pushb	101
+	pushb	109
+	pushb	121
+	call	loadWord
+
+#line	67
+	'* Function Invocation
+	pushi	49
+	pushb	101
+	pushb	110
+	pushb	116
+	pushb	114
+	pushb	121
+	call	loadWord
+	ret	0, 0, 0
+
+#line	72
+	'* Function Definition
+ abs:
+	'* Parameters
+	'* IntType n (offset 4)
+	'* LocalVariables
+	enter	0
+
+#line	73
+	'* IfElse
+	pusha	bp
+	pushi	4
+	addi
+	loadi
+	pushi	0
+	gti
+	jz	label0
+
+#line	73
+	'* Return
+	pusha	bp
+	pushi	4
+	addi
+	loadi
+	jmp	label1
+ label0:
+ label1:
+
+#line	74
+	'* Return
+	pusha	bp
+	pushi	4
+	addi
+	loadi
+	pushi	-1
+	muli
+	ret	2, 0, 2
+
+#line	77
+	'* Function Definition
+ seed:
+	'* Parameters
+	'* IntType n (offset 4)
+	'* LocalVariables
+	enter	0
+
+#line	78
+	'* Assignment
+	pusha	250
+	pusha	bp
+	pushi	4
+	addi
+	loadi
+	storei
+	ret	0, 0, 2
+
+#line	81
+	'* Function Definition
+ rand:
+	'* Parameters
+	'* LocalVariables
+	'* IntType a (offset -2)
+	'* IntType c (offset -4)
+	'* IntType m (offset -6)
+	enter	6
+
+#line	83
+	'* Assignment
+	pusha	bp
+	pushi	-6
+	addi
+	pushi	7793
+	storei
+
+#line	83
+	'* Assignment
+	pusha	bp
+	pushi	-2
+	addi
+	pushi	1234
+	storei
+
+#line	83
+	'* Assignment
+	pusha	bp
+	pushi	-4
+	addi
+	pushi	997
+	storei
+
+#line	85
+	'* Assignment
+	pusha	250
+	pusha	bp
+	pushi	-2
+	addi
+	loadi
+	pusha	250
+	loadi
+	muli
+	pusha	bp
+	pushi	-4
+	addi
+	loadi
+	addi
+	pusha	bp
+	pushi	-6
+	addi
+	loadi
+	modi
+	storei
+
+#line	86
+	'* Assignment
+	pusha	250
+	pusha	250
+	loadi
+	call	abs
+	storei
+
+#line	87
+	'* Return
+	pusha	250
+	loadi
+	ret	2, 6, 0
+
+#line	93
+	'* Function Definition
+ in_word:
+	'* Parameters
+	'* CharType c (offset 6)
+	'* IntType word_index (offset 4)
+	'* LocalVariables
+	'* IntType i (offset -2)
+	'* IntType result (offset -4)
+	enter	4
+
+#line	96
+	'* Assignment
+	pusha	bp
+	pushi	-4
+	addi
+	pushi	0
+	storei
+
+#line	97
+	'* Assignment
+	pusha	bp
+	pushi	-2
+	addi
+	pushi	0
+	storei
+
+#line	98
+	'* While
+ label2:
+	pusha	bp
+	pushi	-2
+	addi
+	loadi
+	pusha	282
+	loadi
+	lti
+	jz	label3
+
+#line	99
+	'* Assignment
+	pusha	bp
+	pushi	-4
+	addi
+	pusha	bp
+	pushi	-4
+	addi
+	loadi
+	pusha	0
+	pusha	bp
+	pushi	4
+	addi
+	loadi
+	pushi	5
+	muli
+	addi
+	pusha	bp
+	pushi	-2
+	addi
+	loadi
+	pushi	1
+	muli
+	addi
+	loadb
+	b2i
+	pusha	bp
+	pushi	6
+	addi
+	loadb
+	b2i
+	eqi
+	addi
+	storei
+
+#line	100
+	'* Assignment
+	pusha	bp
+	pushi	-2
+	addi
+	pusha	bp
+	pushi	-2
+	addi
+	loadi
+	pushi	1
+	addi
+	storei
+	jmp	label2
+ label3:
+
+#line	103
+	'* Return
+	pusha	bp
+	pushi	-4
+	addi
+	loadi
+	ret	2, 4, 3
+
+#line	106
+	'* Function Definition
+ in_tries:
+	'* Parameters
+	'* CharType c (offset 4)
+	'* LocalVariables
+	'* IntType i (offset -2)
+	'* IntType result (offset -4)
+	enter	4
+
+#line	109
+	'* Assignment
+	pusha	bp
+	pushi	-4
+	addi
+	pushi	0
+	storei
+
+#line	110
+	'* Assignment
+	pusha	bp
+	pushi	-2
+	addi
+	pushi	0
+	storei
+
+#line	111
+	'* While
+ label4:
+	pusha	bp
+	pushi	-2
+	addi
+	loadi
+	pusha	282
+	loadi
+	lti
+	jz	label5
+
+#line	112
+	'* Assignment
+	pusha	bp
+	pushi	-4
+	addi
+	pusha	bp
+	pushi	-4
+	addi
+	loadi
+	pusha	252
+	pusha	bp
+	pushi	-2
+	addi
+	loadi
+	pushi	1
+	muli
+	addi
+	loadb
+	b2i
+	pusha	bp
+	pushi	4
+	addi
+	loadb
+	b2i
+	eqi
+	addi
+	storei
+
+#line	113
+	'* Assignment
+	pusha	bp
+	pushi	-2
+	addi
+	pusha	bp
+	pushi	-2
+	addi
+	loadi
+	pushi	1
+	addi
+	storei
+	jmp	label4
+ label5:
+
+#line	116
+	'* Return
+	pusha	bp
+	pushi	-4
+	addi
+	loadi
+	ret	2, 4, 1
+
+#line	119
+	'* Function Definition
+ print_word:
+	'* Parameters
+	'* IntType i (offset 4)
+	'* LocalVariables
+	'* IntType j (offset -2)
+	'* CharType c (offset -3)
+	enter	3
+
+#line	123
+	'* Assignment
+	pusha	bp
+	pushi	-2
+	addi
+	pushi	0
+	storei
+
+#line	124
+	'* While
+ label6:
+	pusha	bp
+	pushi	-2
+	addi
+	loadi
+	pushi	5
+	lti
+	jz	label7
+
+#line	125
+	'* Assignment
+	pusha	bp
+	pushi	-3
+	addi
+	pusha	0
+	pusha	bp
+	pushi	4
+	addi
+	loadi
+	pushi	5
+	muli
+	addi
+	pusha	bp
+	pushi	-2
+	addi
+	loadi
+	pushi	1
+	muli
+	addi
+	loadb
+	storeb
+
+#line	126
+	'* IfElse
+	pusha	bp
+	pushi	-3
+	addi
+	loadb
+	call	in_tries
+	jz	label8
+
+#line	126
+	'* Print
+	pusha	bp
+	pushi	-3
+	addi
+	loadb
+	outb
+	jmp	label9
+ label8:
+
+#line	127
+	'* Print
+	pushb	95
+	outb
+ label9:
+
+#line	129
+	'* Assignment
+	pusha	bp
+	pushi	-2
+	addi
+	pusha	bp
+	pushi	-2
+	addi
+	loadi
+	pushi	1
+	addi
+	storei
+	jmp	label6
+ label7:
+	ret	0, 3, 2
+
+#line	133
+	'* Function Definition
+ completed:
+	'* Parameters
+	'* IntType i (offset 4)
+	'* LocalVariables
+	'* IntType j (offset -2)
+	'* IntType result (offset -4)
+	enter	4
+
+#line	136
+	'* Assignment
+	pusha	bp
+	pushi	-4
+	addi
+	pushi	1
+	storei
+
+#line	137
+	'* Assignment
+	pusha	bp
+	pushi	-2
+	addi
+	pushi	0
+	storei
+
+#line	138
+	'* While
+ label10:
+	pusha	bp
+	pushi	-2
+	addi
+	loadi
+	pushi	5
+	lti
+	jz	label11
+
+#line	139
+	'* Assignment
+	pusha	bp
+	pushi	-4
+	addi
+	pusha	bp
+	pushi	-4
+	addi
+	loadi
+	pusha	0
+	pusha	bp
+	pushi	4
+	addi
+	loadi
+	pushi	5
+	muli
+	addi
+	pusha	bp
+	pushi	-2
+	addi
+	loadi
+	pushi	1
+	muli
+	addi
+	loadb
+	call	in_tries
+	muli
+	storei
+
+#line	140
+	'* Assignment
+	pusha	bp
+	pushi	-2
+	addi
+	pusha	bp
+	pushi	-2
+	addi
+	loadi
+	pushi	1
+	addi
+	storei
+	jmp	label10
+ label11:
+
+#line	143
+	'* Return
+	pusha	bp
+	pushi	-4
+	addi
+	loadi
+	ret	2, 4, 2
+
+#line	146
+	'* Function Definition
+ main:
+	'* Parameters
+	'* LocalVariables
+	'* IntType srng (offset -2)
+	'* IntType word_index (offset -4)
+	'* CharType try (offset -5)
+	'* IntType fails (offset -7)
+	'* IntType max_fails (offset -9)
+	enter	9
+
+#line	150
+	'* Function Invocation
+	call	loadWords
+
+#line	151
+	'* Assignment
+	pusha	282
+	pushi	0
+	storei
+
+#line	152
+	'* Assignment
+	pusha	bp
+	pushi	-7
+	addi
+	pushi	0
+	storei
+
+#line	152
+	'* Assignment
+	pusha	bp
+	pushi	-9
+	addi
+	pushi	7
+	storei
+
+#line	154
+	'* Print
+	pushb	99
+	outb
+
+#line	154
+	'* Print
+	pushb	104
+	outb
+
+#line	154
+	'* Print
+	pushb	111
+	outb
+
+#line	154
+	'* Print
+	pushb	111
+	outb
+
+#line	154
+	'* Print
+	pushb	115
+	outb
+
+#line	154
+	'* Print
+	pushb	101
+	outb
+
+#line	154
+	'* Print
+	pushb	32
+	outb
+
+#line	154
+	'* Print
+	pushb	97
+	outb
+
+#line	154
+	'* Print
+	pushb	32
+	outb
+
+#line	154
+	'* Print
+	pushb	114
+	outb
+
+#line	154
+	'* Print
+	pushb	97
+	outb
+
+#line	154
+	'* Print
+	pushb	110
+	outb
+
+#line	154
+	'* Print
+	pushb	100
+	outb
+
+#line	154
+	'* Print
+	pushb	111
+	outb
+
+#line	154
+	'* Print
+	pushb	109
+	outb
+
+#line	154
+	'* Print
+	pushb	32
+	outb
+
+#line	154
+	'* Print
+	pushb	110
+	outb
+
+#line	154
+	'* Print
+	pushb	117
+	outb
+
+#line	154
+	'* Print
+	pushb	109
+	outb
+
+#line	154
+	'* Print
+	pushb	98
+	outb
+
+#line	154
+	'* Print
+	pushb	101
+	outb
+
+#line	154
+	'* Print
+	pushb	114
+	outb
+
+#line	154
+	'* Print
+	pushb	58
+	outb
+
+#line	155
+	'* Input
+	pusha	bp
+	pushi	-2
+	addi
+	ini
+	storei
+
+#line	157
+	'* Function Invocation
+	pusha	bp
+	pushi	-2
+	addi
+	loadi
+	call	seed
+
+#line	158
+	'* While
+ label12:
+	pusha	bp
+	pushi	-2
+	addi
+	loadi
+	pushi	2
+	gti
+	jz	label13
+
+#line	159
+	'* Function Invocation
+	call	rand
+	popi
+
+#line	160
+	'* Assignment
+	pusha	bp
+	pushi	-2
+	addi
+	pusha	bp
+	pushi	-2
+	addi
+	loadi
+	pushi	2
+	divi
+	storei
+	jmp	label12
+ label13:
+
+#line	163
+	'* Assignment
+	pusha	bp
+	pushi	-4
+	addi
+	call	rand
+	pushi	50
+	modi
+	storei
+
+#line	165
+	'* While
+ label14:
+	pusha	bp
+	pushi	-4
+	addi
+	loadi
+	call	completed
+	not
+	pusha	bp
+	pushi	-7
+	addi
+	loadi
+	pusha	bp
+	pushi	-9
+	addi
+	loadi
+	lei
+	and
+	jz	label15
+
+#line	166
+	'* Function Invocation
+	pusha	bp
+	pushi	-4
+	addi
+	loadi
+	call	print_word
+
+#line	167
+	'* Print
+	pushb	10
+	outb
+
+#line	169
+	'* Assignment
+	pusha	bp
+	pushi	-5
+	addi
+	pushb	10
+	storeb
+
+#line	170
+	'* While
+ label16:
+	pusha	bp
+	pushi	-5
+	addi
+	loadb
+	b2i
+	pushb	10
+	b2i
+	eqi
+	jz	label17
+
+#line	170
+	'* Input
+	pusha	bp
+	pushi	-5
+	addi
+	inb
+	storeb
+	jmp	label16
+ label17:
+
+#line	172
+	'* Assignment
+	pusha	252
+	pusha	282
+	loadi
+	pushi	1
+	muli
+	addi
+	pusha	bp
+	pushi	-5
+	addi
+	loadb
+	storeb
+
+#line	173
+	'* IfElse
+	pusha	bp
+	pushi	-5
+	addi
+	loadb
+	pusha	bp
+	pushi	-4
+	addi
+	loadi
+	call	in_word
+	not
+	jz	label18
+
+#line	174
+	'* Assignment
+	pusha	bp
+	pushi	-7
+	addi
+	pusha	bp
+	pushi	-7
+	addi
+	loadi
+	pushi	1
+	addi
+	storei
+	jmp	label19
+ label18:
+ label19:
+
+#line	177
+	'* Assignment
+	pusha	282
+	pusha	282
+	loadi
+	pushi	1
+	addi
+	storei
+	jmp	label14
+ label15:
+
+#line	180
+	'* IfElse
+	pusha	bp
+	pushi	-7
+	addi
+	loadi
+	pusha	bp
+	pushi	-9
+	addi
+	loadi
+	gei
+	jz	label20
+
+#line	180
+	'* Print
+	pushb	89
+	outb
+
+#line	180
+	'* Print
+	pushb	111
+	outb
+
+#line	180
+	'* Print
+	pushb	117
+	outb
+
+#line	180
+	'* Print
+	pushb	32
+	outb
+
+#line	180
+	'* Print
+	pushb	76
+	outb
+
+#line	180
+	'* Print
+	pushb	111
+	outb
+
+#line	180
+	'* Print
+	pushb	115
+	outb
+
+#line	180
+	'* Print
+	pushb	101
+	outb
+	jmp	label21
+ label20:
+
+#line	181
+	'* Print
+	pushb	89
+	outb
+
+#line	181
+	'* Print
+	pushb	111
+	outb
+
+#line	181
+	'* Print
+	pushb	117
+	outb
+
+#line	181
+	'* Print
+	pushb	32
+	outb
+
+#line	181
+	'* Print
+	pushb	87
+	outb
+
+#line	181
+	'* Print
+	pushb	105
+	outb
+
+#line	181
+	'* Print
+	pushb	110
+	outb
+
+#line	181
+	'* Print
+	pushb	33
+	outb
+ label21:
+	ret	0, 9, 0

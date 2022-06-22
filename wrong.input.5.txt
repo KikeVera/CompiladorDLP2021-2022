@@ -1,21 +1,9 @@
 
-v:[10]int;
-
-def f(b:[10]int):int {
-  a:double;						# Error 1
-  return 34.5;					# Error 2
-
-}
+v:[10]int ;
 
 def main(): {
   i:int;
   i[0] = 0;			# Error 1
   v[3] = 3.4;		# Error 2
   v[1][2] = 'a';	# Error 3
-  print (int)'g';
-  print (double)'g';
-   print !'g';
-  print -'g';
-
 }
-

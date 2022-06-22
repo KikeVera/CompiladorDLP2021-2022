@@ -6,6 +6,5 @@ date: struct  {
 
 def main(): {
   input date.year;	# Error 2
-
 }
 

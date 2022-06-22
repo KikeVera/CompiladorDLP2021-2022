@@ -13,4 +13,3 @@ def main(): {
     if f:      		# Error 4
       print !f;   	# Error 5
 }
-

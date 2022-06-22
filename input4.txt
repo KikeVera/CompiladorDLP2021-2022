@@ -1,4 +1,6 @@
-pair:struct { 
+vector: [3][5] int;
+
+pair:struct {
   integer:int;
   character:char;
 };
@@ -48,6 +50,7 @@ def main(): {
   i, j:int;
   p();
   i=0;
+  vector[1][4]=8;
   pair.character='0';
   pair.integer=(int)'0';
 
@@ -59,7 +62,7 @@ def main(): {
   i = 0;
   while i < 8: {
     # Shows the Fib sequence, from 1 to 8 (34)
-    print '(', i + 1, ')', fibonacci[i][0], 
+    print '(', i + 1, ')', fibonacci[i][0],
           '+', fibonacci[i][1] , '=' ,
           fibonacci[i][2] , '\n';
     i = i + 1;

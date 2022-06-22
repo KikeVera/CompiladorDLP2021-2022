@@ -18,4 +18,3 @@ def main(): {
   f(3.2);    					# Error 7
   i = g();     					# Error 8
 }
-
